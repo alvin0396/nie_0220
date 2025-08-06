@@ -201,9 +201,9 @@
         #game-section {
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
+            background-repeat: no-repeat;
             position: relative;
-            transition: all 0.8s ease-in-out;
+            transition: background-image 0.5s ease-in-out;
         }
 
         .game-overlay {
@@ -212,8 +212,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(1px);
         }
 
         .game-content {
@@ -246,17 +246,17 @@
             font-weight: bold;
             color: #fff;
             margin-bottom: 40px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
             max-width: 90%;
             width: 100%;
             max-width: 800px;
             line-height: 1.4;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 1);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             animation: questionAppear 0.6s ease-out;
         }
 
@@ -275,19 +275,20 @@
         .answer-btn {
             padding: 15px 30px;
             font-size: clamp(1.1em, 3vw, 1.3em);
-            border: 3px solid rgba(52, 152, 219, 0.8);
-            background: rgba(255, 255, 255, 0.6);
-            color: #2c3e50;
+            border: 3px solid rgba(52, 152, 219, 0.9);
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a1a1a;
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
             font-weight: bold;
             font-family: inherit;
             min-width: 120px;
             position: relative;
             overflow: hidden;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
         }
 
         .answer-btn::before {
@@ -333,11 +334,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: cover;
+            background-size: contain;
             background-position: center;
-            opacity: 0.6;
+            background-repeat: no-repeat;
+            opacity: 0.8;
             z-index: 1;
-            filter: blur(1px);
         }
 
         .ending-content {
@@ -427,18 +428,26 @@
             position: absolute;
             color: #ffd700;
             font-size: clamp(1.5em, 4vw, 2em);
-            animation: twinkle 2s ease-in-out infinite;
-            filter: drop-shadow(0 0 10px #ffd700);
+            animation: twinkle 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px #ffd700);
+            text-shadow: 0 0 20px #ffd700;
         }
 
         @keyframes twinkle {
-            0%, 100% { 
-                opacity: 0.3; 
-                transform: scale(1) rotate(0deg); 
+            0% { 
+                opacity: 0.4; 
+                transform: scale(0.8) rotate(0deg); 
+                filter: drop-shadow(0 0 10px #ffd700);
             }
             50% { 
                 opacity: 1; 
-                transform: scale(1.2) rotate(180deg); 
+                transform: scale(1.3) rotate(180deg); 
+                filter: drop-shadow(0 0 25px #ffd700);
+            }
+            100% { 
+                opacity: 0.4; 
+                transform: scale(0.8) rotate(360deg); 
+                filter: drop-shadow(0 0 10px #ffd700);
             }
         }
 
@@ -578,7 +587,7 @@
     <div id="game-section" class="section">
         <div class="game-overlay"></div>
         <div class="game-content">
-            <div class="instruction">是的话选择"嗯"，不是的话就填"不是"</div>
+            <div class="instruction" id="instruction">是的话选择"嗯"，不是的话就填"不是"</div>
             <div class="question" id="question-text" role="main"></div>
             <div class="answer-buttons">
                 <button class="answer-btn" onclick="nextQuestion()" aria-label="是的">嗯</button>
@@ -873,41 +882,55 @@
                 progressIndicator.update(1); // 进入游戏部分
             },
 
-            async showQuestion() {
+                         async showQuestion() {
                 if (gameState.currentQuestion >= questions.length) {
                     this.showEnding();
                     return;
                 }
 
                 const questionElement = document.getElementById('question-text');
+                const instructionElement = document.getElementById('instruction');
+                
+                // 只在第一题显示说明
+                if (gameState.currentQuestion === 0) {
+                    instructionElement.style.display = 'block';
+                } else {
+                    instructionElement.style.display = 'none';
+                }
+
                 questionElement.style.opacity = '0';
                 
-                setTimeout(async () => {
+                // 预加载并设置背景
+                const imageSrc = backgroundImages[gameState.currentQuestion];
+                try {
+                    await utils.preloadImage(imageSrc);
+                    const gameSection = document.getElementById('game-section');
+                    gameSection.style.backgroundImage = `url("${imageSrc}")`;
+                } catch (e) {
+                    console.warn('背景图片加载失败:', imageSrc);
+                }
+                
+                setTimeout(() => {
                     questionElement.textContent = questions[gameState.currentQuestion];
-                    
-                    // 预加载并设置背景
-                    const imageSrc = backgroundImages[gameState.currentQuestion];
-                    try {
-                        await utils.preloadImage(imageSrc);
-                        const gameSection = document.getElementById('game-section');
-                        gameSection.style.backgroundImage = `url("${imageSrc}")`;
-                    } catch (e) {
-                        console.warn('背景图片加载失败:', imageSrc);
-                    }
-                    
                     questionElement.style.opacity = '1';
                     progressIndicator.update(gameState.currentQuestion + 2); // +2 因为包含开始界面
-                }, 200);
+                }, 300);
             },
 
-            nextQuestion: utils.debounce(function() {
+                         nextQuestion: utils.debounce(function() {
+                // 确保问题已经显示完成再允许下一步
+                const questionElement = document.getElementById('question-text');
+                if (questionElement.style.opacity === '0' || !questionElement.textContent) {
+                    return; // 如果问题还没显示完成，忽略点击
+                }
+                
                 gameState.currentQuestion++;
                 if (gameState.currentQuestion < questions.length) {
                     gameCore.showQuestion();
                 } else {
                     gameCore.showEnding();
                 }
-            }, 300),
+            }, 500),
 
             async showEnding() {
                 audioManager.stop(gameAudio);
@@ -1025,30 +1048,61 @@
                 this.createStars();
             },
 
-            createStars() {
+                         createStars() {
                 const container = document.getElementById('ending-section');
-                const positions = [
-                    {top: '15%', left: '15%'},
-                    {top: '25%', left: '80%'},
-                    {top: '60%', left: '10%'},
-                    {top: '70%', left: '85%'},
-                    {top: '40%', left: '20%'},
-                    {top: '30%', left: '70%'},
-                    {top: '80%', left: '30%'},
-                    {top: '20%', left: '50%'}
-                ];
-
-                positions.forEach((pos, index) => {
+                const starCount = 12;
+                
+                for (let i = 0; i < starCount; i++) {
                     setTimeout(() => {
                         const star = document.createElement('div');
                         star.className = 'celestial';
                         star.innerHTML = '⭐';
-                        star.style.top = pos.top;
-                        star.style.left = pos.left;
-                        star.style.animationDelay = Math.random() * 2 + 's';
+                        
+                        // 随机位置，避免重叠
+                        let top, left;
+                        do {
+                            top = Math.random() * 80 + 10; // 10-90%
+                            left = Math.random() * 80 + 10; // 10-90%
+                        } while (this.isPositionTooClose(top, left, container));
+                        
+                        star.style.top = top + '%';
+                        star.style.left = left + '%';
+                        star.style.animationDelay = Math.random() * 3 + 's';
+                        star.style.animationDuration = (Math.random() * 2 + 2) + 's';
                         container.appendChild(star);
-                    }, index * 200);
-                });
+                        
+                        // 5秒后移动到新位置
+                        setTimeout(() => {
+                            this.moveStarToNewPosition(star, container);
+                        }, 5000 + Math.random() * 3000);
+                    }, i * 300);
+                }
+            },
+            
+            isPositionTooClose(top, left, container) {
+                const existingStars = container.querySelectorAll('.celestial');
+                for (let star of existingStars) {
+                    const starTop = parseFloat(star.style.top);
+                    const starLeft = parseFloat(star.style.left);
+                    const distance = Math.sqrt(Math.pow(top - starTop, 2) + Math.pow(left - starLeft, 2));
+                    if (distance < 15) return true; // 最小距离15%
+                }
+                return false;
+            },
+            
+            moveStarToNewPosition(star, container) {
+                const moveInterval = setInterval(() => {
+                    let newTop, newLeft;
+                    do {
+                        newTop = Math.random() * 80 + 10;
+                        newLeft = Math.random() * 80 + 10;
+                    } while (Math.abs(newTop - parseFloat(star.style.top)) < 20 || 
+                             Math.abs(newLeft - parseFloat(star.style.left)) < 20);
+                    
+                    star.style.transition = 'all 2s ease-in-out';
+                    star.style.top = newTop + '%';
+                    star.style.left = newLeft + '%';
+                }, 8000 + Math.random() * 5000);
             }
         };
 
@@ -1084,12 +1138,17 @@
                     document.getElementById('loading').classList.add('hide');
                 }, 500);
                 
-                // 尝试自动播放开始音乐
-                setTimeout(async () => {
-                    if (document.getElementById('start-section').classList.contains('active')) {
-                        await audioManager.play(startAudio);
-                    }
-                }, 1000);
+                // 立即尝试自动播放开始音乐
+                if (document.getElementById('start-section').classList.contains('active')) {
+                    audioManager.play(startAudio).catch(() => {
+                        // 如果自动播放失败，设置点击后播放
+                        const playOnClick = () => {
+                            audioManager.play(startAudio);
+                            document.removeEventListener('click', playOnClick);
+                        };
+                        document.addEventListener('click', playOnClick);
+                    });
+                }
                 
             } catch (error) {
                 console.error('初始化失败:', error);
