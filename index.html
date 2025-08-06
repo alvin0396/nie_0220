@@ -474,6 +474,7 @@
         ];
 
         // 12张日系动漫背景图，对应12个问题
+        // 如果图片不显示，临时使用渐变色背景
         const backgrounds = [
             'your-photo1.jpg',
             'your-photo2.jpg', 
@@ -487,6 +488,22 @@
             'your-photo10.jpg',
             'your-photo11.jpg',
             'your-photo12.jpg'
+        ];
+        
+        // 备用渐变色背景
+        const fallbackBackgrounds = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+            'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+            'linear-gradient(135deg, #ff8a80 0%, #ea6100 100%)',
+            'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)',
+            'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)',
+            'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
+            'linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%)'
         ];
         let currentQuestion = 0;
 
@@ -544,7 +561,19 @@
             
             // 设置对应的日系动漫背景图
             quizSection.className = 'section quiz-section active';
-            quizSection.style.backgroundImage = `url("${backgrounds[currentQuestion]}")`;
+            
+            // 先尝试加载图片，如果失败则使用渐变色背景
+            const img = new Image();
+            img.onload = function() {
+                quizSection.style.backgroundImage = `url("${backgrounds[currentQuestion]}")`;
+                console.log(`成功加载背景图: ${backgrounds[currentQuestion]}`);
+            };
+            img.onerror = function() {
+                quizSection.style.backgroundImage = fallbackBackgrounds[currentQuestion];
+                console.log(`图片加载失败，使用渐变色背景: ${backgrounds[currentQuestion]}`);
+            };
+            img.src = backgrounds[currentQuestion];
+            
             quizSection.style.backgroundSize = 'cover';
             quizSection.style.backgroundPosition = 'center';
             quizSection.style.backgroundRepeat = 'no-repeat';
@@ -569,6 +598,7 @@
             
             // 设置情侣照片作为结尾背景
             document.getElementById('endingBg').style.backgroundImage = 'url("couple-photo.jpg")';
+            console.log('正在加载情侣照片: couple-photo.jpg');
             
             // Start scrolling message
             document.getElementById('scrollingMessage').textContent = endingMessage;
