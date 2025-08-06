@@ -440,7 +440,7 @@
             line-height: 2.5;
             text-align: center;
             text-shadow: 2px 2px 6px var(--shadow-heavy);
-            animation: scrollUp 300s linear;
+            animation: scrollUp 600s linear;
             white-space: pre-line;
             font-weight: 500;
             padding: 0 20px;
@@ -1148,10 +1148,8 @@
                     // 切换到结尾部分
                     utils.switchSection('game-section', 'ending-section');
                     
-                    // 播放结尾音乐
+                    // 播放结尾音乐并立即开始字幕
                     await audioManager.play(endingAudio);
-                    
-                    // 开始字幕滚动
                     this.startScrollingText();
                     
                     // 更新进度指示器
@@ -1256,11 +1254,6 @@
                         this.showFinalMessage();
                     }, 3000);
                 });
-
-                // 清理定时器（如果需要）
-                this.cleanupTimers = () => {
-                    clearTimeout(finalMessageTimer);
-                };
             },
 
             showFinalMessage() {
