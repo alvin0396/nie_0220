@@ -440,7 +440,7 @@
             line-height: 2.5;
             text-align: center;
             text-shadow: 2px 2px 6px var(--shadow-heavy);
-            animation: scrollUp 320s linear;
+            animation: scrollUp 300s linear;
             white-space: pre-line;
             font-weight: 500;
             padding: 0 20px;
@@ -1248,10 +1248,10 @@
                 // 设置文字内容并立即开始滚动
                 scrollingText.textContent = message;
                 
-                // 130秒后显示最终消息和星星特效
+                // 185秒后显示最终消息和星星特效
                 setTimeout(() => {
                     this.showFinalMessage();
-                }, 130000);
+                }, 185000);
             },
 
             showFinalMessage() {
