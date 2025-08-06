@@ -284,32 +284,38 @@
         }
         
         .scrolling-message {
-            font-size: 1.4em;
-            line-height: 1.8;
+            font-size: 1.6em;
+            line-height: 2.2;
             color: white;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.9), 0 0 10px rgba(255,255,255,0.3);
             font-weight: 400;
             position: absolute;
             width: 100%;
-            animation: scrollUp 45s linear forwards;
+            animation: scrollUp 110s linear forwards;
             white-space: pre-line;
+            letter-spacing: 1px;
+            font-family: 'Noto Sans SC', serif;
         }
         
         @keyframes scrollUp {
             0% {
                 transform: translateY(100%);
                 opacity: 0;
+                filter: blur(2px);
             }
-            5% {
+            8% {
                 opacity: 1;
+                filter: blur(0px);
             }
-            95% {
+            92% {
                 opacity: 1;
+                filter: blur(0px);
             }
             100% {
                 transform: translateY(-100%);
-                opacity: 1;
+                opacity: 0.3;
+                filter: blur(1px);
             }
         }
         
@@ -318,18 +324,33 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 2em;
+            font-size: 2.2em;
             font-weight: 600;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            color: #ffb6c1;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.9), 0 0 15px rgba(255,182,193,0.8), 0 0 30px rgba(255,255,255,0.4);
             text-align: center;
             opacity: 0;
-            animation: finalAppear 3s ease-in-out 50s forwards;
+            animation: finalAppear 4s ease-in-out 113s forwards;
+            letter-spacing: 2px;
+            font-family: 'Noto Sans SC', serif;
         }
         
         @keyframes finalAppear {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.5) rotate(-5deg); 
+                filter: blur(3px);
+            }
+            50% { 
+                opacity: 0.8; 
+                transform: translate(-50%, -50%) scale(1.1) rotate(2deg); 
+                filter: blur(1px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+                filter: blur(0px);
+            }
         }
         
         /* Stars and Moon */
@@ -348,7 +369,7 @@
             font-size: 4em;
             color: #f4f4f4;
             opacity: 0;
-            animation: moonGlow 3s ease-in-out 50s forwards;
+            animation: moonGlow 4s ease-in-out 113s forwards;
         }
         
         @keyframes starFlicker {
@@ -449,12 +470,12 @@
             </div>
         </div>
         <div class="moon">🌙</div>
-        <div class="star-element" style="top: 15%; left: 15%; animation-delay: 50s;">⭐</div>
-        <div class="star-element" style="top: 25%; left: 80%; animation-delay: 51s;">✨</div>
-        <div class="star-element" style="top: 70%; left: 20%; animation-delay: 52s;">⭐</div>
-        <div class="star-element" style="top: 60%; left: 75%; animation-delay: 50.5s;">✨</div>
-        <div class="star-element" style="top: 40%; left: 90%; animation-delay: 51.5s;">⭐</div>
-        <div class="star-element" style="top: 80%; left: 60%; animation-delay: 52.5s;">✨</div>
+        <div class="star-element" style="top: 15%; left: 15%; animation-delay: 113s;">⭐</div>
+        <div class="star-element" style="top: 25%; left: 80%; animation-delay: 113.5s;">✨</div>
+        <div class="star-element" style="top: 70%; left: 20%; animation-delay: 114s;">⭐</div>
+        <div class="star-element" style="top: 60%; left: 75%; animation-delay: 113.3s;">✨</div>
+        <div class="star-element" style="top: 40%; left: 90%; animation-delay: 114.2s;">⭐</div>
+        <div class="star-element" style="top: 80%; left: 60%; animation-delay: 113.8s;">✨</div>
     </div>
 
     <script>
@@ -507,19 +528,83 @@
         ];
         let currentQuestion = 0;
 
-        const endingMessage = `其实答案并不重要，小傻瓜，别再钻牛角尖啦，也别再想到我就痛苦了噢。我们明明过得那么开心，你想想呀去年我那么地照顾你那么地在乎你所说的事情，哪有一个不爱你的男生会时时刻刻记得所有你的事情呢。
+        const endingMessage = `其实答案并不重要，小傻瓜
+别再钻牛角尖啦
+也别再想到我就痛苦了噢
 
-我知道其实有的时候你内心是在崩塌边缘的，总是一个人默默承受，虽然表面上装得很坚强不过都是为了让我们觉得不要担心你，觉得你没有事情，所以我才会没发现到你总是一个人哭泣，是我不细心了！
+我们明明过得那么开心
+你想想呀去年我那么地照顾你
+那么地在乎你所说的事情
 
-你只不过是个很要强的小女生，其实内心很脆弱也很胆小，有时候总觉得自己很无助，对很多事情都无能为力。即便你什么都没说却又希望有人知道你内心的绝望感，那个了解你的人会拉你一把，哪怕只是一次也能拯救你的心。
+哪有一个不爱你的男生
+会时时刻刻记得
+所有你的事情呢
 
-我想你会喜欢上我，肯定是因为你没想过会有人用溫柔接住了你快崩塌的世界，你也说过我就好像星辰，我很荣幸你能那么信任我，所以我才会在你有困难的时候无条件的给你一盏灯，也像星辰一样指引着你。
+我知道其实有的时候
+你内心是在崩塌边缘的
+总是一个人默默承受
 
-我呀，早在我们住在一起的时候就努力的耐心的守候着那个非常不完美的你，因为那个人是你，所以你的性格你的每个习惯我都会很喜欢着。
+虽然表面上装得很坚强
+不过都是为了让我们觉得
+不要担心你
 
-其實合適的人都會經歷百次的不合適，沒有天生就合適的兩個人，只有兩個願意磨合的心，对我来说，我爱上你没什么了不起，但我会爱下去才了不起。
+所以我才会没发现到
+你总是一个人哭泣
+是我不细心了
 
-如今的我不再黑暗裡沈淪，也找到自己的目标了，现在的你如果找到了你想要的人和方向就往那个方向奔跑吧，我祝福你，愿你这一生都能快快乐乐。`;
+你只不过是个很要强的小女生
+其实内心很脆弱也很胆小
+有时候总觉得自己很无助
+
+即便你什么都没说
+却又希望有人知道
+你内心的绝望感
+
+那个了解你的人会拉你一把
+哪怕只是一次
+也能拯救你的心
+
+我想你会喜欢上我
+肯定是因为你没想过
+会有人用温柔接住了你快崩塌的世界
+
+你也说过我就好像星辰
+我很荣幸你能那么信任我
+所以我才会在你有困难的时候
+
+无条件的给你一盏灯
+也像星辰一样
+指引着你
+
+我呀，早在我们住在一起的时候
+就努力的耐心的守候着
+那个非常不完美的你
+
+因为那个人是你
+所以你的性格
+你的每个习惯我都会很喜欢着
+
+其实合适的人
+都会经历百次的不合适
+没有天生就合适的两个人
+
+只有两个愿意磨合的心
+对我来说
+我爱上你没什么了不起
+
+但我会爱下去
+才了不起
+
+如今的我不再黑暗里沉沦
+也找到自己的目标了
+现在的你
+
+如果找到了你想要的人和方向
+就往那个方向奔跑吧
+我祝福你
+
+愿你这一生
+都能快快乐乐`;
 
         function createBubbles() {
             const bubbleContainer = document.querySelector('.intro-section');
@@ -603,13 +688,13 @@
             // Start scrolling message
             document.getElementById('scrollingMessage').textContent = endingMessage;
             
-            // Show stars after message ends
+            // Show stars when final message appears (1分50秒 + 3秒 = 113秒)
             setTimeout(() => {
                 const stars = document.querySelectorAll('.star-element');
                 stars.forEach(star => {
                     star.style.animationPlayState = 'running';
                 });
-            }, 45000);
+            }, 113000);
         }
 
         // Initialize
