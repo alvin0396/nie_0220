@@ -428,7 +428,7 @@
             line-height: 2.5;
             text-align: center;
             text-shadow: 2px 2px 6px var(--shadow-heavy);
-            animation: scrollUp 230s linear;
+            animation: scrollUp 210s linear;
             animation-play-state: paused;
             white-space: pre-line;
             font-weight: 500;
@@ -1160,7 +1160,7 @@
                     scrollingText.style.animationPlayState = 'running';
                 }
                 
-                // 230秒后隐藏滚动文字，3秒空白后显示最终消息
+                // 210秒后隐藏滚动文字，3秒空白后显示最终消息
                 setTimeout(() => {
                     if (scrollingText) {
                         scrollingText.style.opacity = '0';
@@ -1168,7 +1168,7 @@
                     setTimeout(() => {
                         this.showFinalMessage();
                     }, 3000);
-                }, 230000);
+                }, 210000);
             },
 
             showFinalMessage() {
