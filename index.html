@@ -232,12 +232,12 @@
             font-size: clamp(1em, 3vw, 1.2em);
             color: #fff;
             margin-bottom: 30px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.2);
             padding: 12px 24px;
             border-radius: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(3px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -246,16 +246,16 @@
             font-weight: bold;
             color: #fff;
             margin-bottom: 40px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.2);
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
             max-width: 90%;
             width: 100%;
             max-width: 800px;
             line-height: 1.4;
             text-shadow: 2px 2px 6px rgba(0, 0, 0, 1);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(3px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             animation: questionAppear 0.6s ease-out;
         }
@@ -334,7 +334,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: cover;
+            background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             opacity: 0.9;
@@ -373,7 +373,7 @@
             line-height: 2.0;
             text-align: center;
             text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
-            animation: scrollUp 300s linear;
+            animation: scrollUp 170s linear;
             white-space: pre-line;
             font-weight: 500;
             padding: 0 20px;
@@ -1033,13 +1033,13 @@
                 const scrollingText = document.getElementById('scrolling-text');
                 scrollingText.textContent = message;
                 
-                // 5分钟后隐藏滚动文字，3秒空白后显示最终消息
+                // 170秒后隐藏滚动文字，3秒空白后显示最终消息
                 setTimeout(() => {
                     scrollingText.style.opacity = '0';
                     setTimeout(() => {
                         this.showFinalMessage();
                     }, 3000);
-                }, 300000); // 5分钟
+                }, 170000); // 170秒
             },
 
             showFinalMessage() {
