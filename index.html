@@ -133,6 +133,7 @@
             background-size: cover;
             background-position: center;
             position: relative;
+            transition: background 0.8s ease-in-out;
         }
 
         .game-overlay {
@@ -159,25 +160,27 @@
 
         .instruction {
             font-size: 1.2em;
-            color: #666;
+            color: #fff;
             margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.5);
             padding: 10px 20px;
             border-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
         .question {
             font-size: 2em;
             font-weight: bold;
-            color: #2c3e50;
+            color: #fff;
             margin-bottom: 40px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(0, 0, 0, 0.5);
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
             max-width: 800px;
             line-height: 1.4;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
         .answer-buttons {
@@ -188,17 +191,19 @@
         .answer-btn {
             padding: 15px 30px;
             font-size: 1.3em;
-            border: 3px solid #3498db;
-            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid rgba(52, 152, 219, 0.8);
+            background: rgba(255, 255, 255, 0.5);
             color: #2c3e50;
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            font-weight: bold;
         }
 
         .answer-btn:hover {
-            background: #3498db;
+            background: rgba(52, 152, 219, 0.8);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
@@ -206,9 +211,21 @@
 
         /* 结尾部分样式 */
         #ending-section {
-            background: linear-gradient(135deg, #ff9999, #ffcccc);
+            background: linear-gradient(135deg, rgba(255, 153, 153, 0.7), rgba(255, 204, 204, 0.7));
             position: relative;
             overflow: hidden;
+        }
+
+        .ending-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.6;
+            z-index: 1;
         }
 
         .ending-content {
@@ -224,8 +241,8 @@
 
         .message-container {
             position: relative;
-            width: 90%;
-            max-width: 1000px;
+            width: 70%;
+            max-width: 800px;
             height: 80%;
             overflow: hidden;
         }
@@ -233,22 +250,25 @@
         .scrolling-text {
             position: absolute;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             color: white;
-            font-size: 1.8em;
-            line-height: 2.2;
+            font-size: 1.6em;
+            line-height: 2.0;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            animation: scrollUp linear;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+            animation: scrollUp 110s linear;
+            white-space: pre-line;
+            font-weight: 500;
         }
 
         @keyframes scrollUp {
             0% {
-                transform: translateY(100%);
+                transform: translateX(-50%) translateY(100%);
             }
             100% {
-                transform: translateY(-100%);
+                transform: translateX(-50%) translateY(-100%);
             }
         }
 
@@ -260,14 +280,15 @@
             font-size: 2.5em;
             font-weight: bold;
             color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9);
             opacity: 0;
             text-align: center;
+            z-index: 20;
         }
 
         .final-message.show {
             opacity: 1;
-            animation: fadeIn 2s ease-in-out;
+            animation: fadeIn 3s ease-in-out;
         }
 
         @keyframes fadeIn {
@@ -331,6 +352,7 @@
 
     <!-- 结尾部分 -->
     <div id="ending-section" class="section">
+        <div class="ending-background" id="ending-background"></div>
         <div class="ending-content">
             <div class="message-container">
                 <div class="scrolling-text" id="scrolling-text"></div>
@@ -341,14 +363,14 @@
     </div>
 
     <!-- 音频元素 -->
-    <audio id="start-audio" loop>
-        <source src="https://www.youtube.com/watch?v=aqGhPk73tkU" type="audio/mpeg">
+    <audio id="start-audio" loop preload="auto">
+        <source src="start-music.mp3" type="audio/mpeg">
     </audio>
-    <audio id="game-audio" loop>
-        <source src="https://www.youtube.com/watch?v=H5ohDQ-umHM" type="audio/mpeg">
+    <audio id="game-audio" loop preload="auto">
+        <source src="game-music.mp3" type="audio/mpeg">
     </audio>
-    <audio id="ending-audio">
-        <source src="https://www.youtube.com/watch?v=9IP2S9aSWfI" type="audio/mpeg">
+    <audio id="ending-audio" preload="auto">
+        <source src="ending-music.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -403,8 +425,14 @@
             document.getElementById('game-section').classList.add('active');
             
             // 停止开始音乐，播放游戏音乐
-            if (startAudio) startAudio.pause();
-            if (gameAudio) gameAudio.play();
+            if (startAudio) {
+                startAudio.pause();
+                startAudio.currentTime = 0;
+            }
+            if (gameAudio) {
+                gameAudio.currentTime = 0;
+                gameAudio.play().catch(e => console.log('Game audio play failed:', e));
+            }
             
             showQuestion();
         }
@@ -414,9 +442,11 @@
             if (currentQuestion < questions.length) {
                 document.getElementById('question-text').textContent = questions[currentQuestion];
                 
-                // 更换背景
+                // 更换背景，添加平滑过渡
                 const gameSection = document.getElementById('game-section');
-                gameSection.style.background = backgroundImages[currentQuestion % backgroundImages.length];
+                setTimeout(() => {
+                    gameSection.style.background = backgroundImages[currentQuestion % backgroundImages.length];
+                }, 100);
             }
         }
 
@@ -435,41 +465,114 @@
             document.getElementById('game-section').classList.remove('active');
             document.getElementById('ending-section').classList.add('active');
             
+            // 设置情侣照片背景
+            const endingBg = document.getElementById('ending-background');
+            endingBg.style.backgroundImage = 'url("couple-photo.jpg")';
+            
             // 停止游戏音乐，播放结尾音乐
-            if (gameAudio) gameAudio.pause();
-            if (endingAudio) endingAudio.play();
+            if (gameAudio) {
+                gameAudio.pause();
+                gameAudio.currentTime = 0;
+            }
+            if (endingAudio) {
+                endingAudio.currentTime = 0;
+                endingAudio.play().catch(e => console.log('Ending audio play failed:', e));
+            }
             
             startScrollingText();
         }
 
         // 开始滚动文字
         function startScrollingText() {
-            const message = `其实答案并不重要，小傻瓜，别再钻牛角尖啦，也别再想到我就痛苦了噢。
+            const message = `其实答案并不重要，小傻瓜
+别再钻牛角尖啦
+也别再想到我就痛苦了噢
 
-我们明明过得那么开心，你想想呀去年我那么地照顾你那么地在乎你所说的事情，哪有一个不爱你的男生会时时刻刻记得所有你的事情呢。
+我们明明过得那么开心
+你想想呀去年我那么地照顾你
+那么地在乎你所说的事情
 
-我知道其实有的时候你内心是在崩塌边缘的，总是一个人默默承受，虽然表面上装得很坚强不过都是为了让我们觉得不要担心你，觉得你没有事情，所以我才会没发现到你总是一个人哭泣，是我不细心了！
+哪有一个不爱你的男生
+会时时刻刻记得
+所有你的事情呢
 
-你只不过是个很要强的小女生，其实内心很脆弱也很胆小，有时候总觉得自己很无助，对很多事情都无能为力。
+我知道其实有的时候
+你内心是在崩塌边缘的
+总是一个人默默承受
 
-即便你什么都没说却又希望有人知道你内心的绝望感，那个了解你的人会拉你一把，哪怕只是一次也能拯救你的心。
+虽然表面上装得很坚强
+不过都是为了让我们觉得
+不要担心你，觉得你没有事情
 
-我想你会喜欢上我，肯定是因为你没想过会有人用温柔接住了你快崩塌的世界，你也说过我就好像星辰，我很荣幸你能那么信任我，所以我才会在你有困难的时候无条件的给你一盏灯，也像星辰一样指引着你。
+所以我才会没发现到
+你总是一个人哭泣
+是我不细心了！
 
-我呀，早在我们住在一起的时候就努力的耐心的守候着那个非常不完美的你，因为那个人是你，所以你的性格你的每个习惯我都会很喜欢着。
+你只不过是个很要强的小女生
+其实内心很脆弱也很胆小
+有时候总觉得自己很无助
 
-其实合适的人都会经历百次的不合适，没有天生就合适的两个人，只有两个愿意磨合的心，对我来说，我爱上你没什么了不起，但我会爱下去才了不起。
+对很多事情都无能为力
+即便你什么都没说
+却又希望有人知道你内心的绝望感
 
-如今的我不再黑暗里沉沦，也找到自己的目标了，现在的你如果找到了你想要的人和方向就往那个方向奔跑吧，我祝福你，愿你这一生都能快快乐乐。`;
+那个了解你的人会拉你一把
+哪怕只是一次
+也能拯救你的心
+
+我想你会喜欢上我
+肯定是因为你没想过
+会有人用温柔接住了你快崩塌的世界
+
+你也说过我就好像星辰
+我很荣幸你能那么信任我
+所以我才会在你有困难的时候
+
+无条件的给你一盏灯
+也像星辰一样
+指引着你
+
+我呀，早在我们住在一起的时候
+就努力的耐心的守候着
+那个非常不完美的你
+
+因为那个人是你
+所以你的性格
+你的每个习惯我都会很喜欢着
+
+其实合适的人
+都会经历百次的不合适
+没有天生就合适的两个人
+
+只有两个愿意磨合的心
+对我来说
+我爱上你没什么了不起
+
+但我会爱下去
+才了不起
+
+如今的我不再黑暗里沉沦
+也找到自己的目标了
+现在的你
+
+如果找到了你想要的人和方向
+就往那个方向奔跑吧
+我祝福你
+
+愿你这一生
+都能快快乐乐`;
 
             const scrollingText = document.getElementById('scrolling-text');
             scrollingText.textContent = message;
-            scrollingText.style.animationDuration = '45s';
             
-            // 45秒后显示最终消息和天体效果
+            // 1分50秒后隐藏滚动文字，3秒空白后显示最终消息
             setTimeout(() => {
-                showFinalMessage();
-            }, 45000);
+                scrollingText.style.opacity = '0';
+                // 3秒后显示最终消息
+                setTimeout(() => {
+                    showFinalMessage();
+                }, 3000);
+            }, 110000); // 1分50秒 = 110秒
         }
 
         // 显示最终消息
@@ -512,18 +615,28 @@
         window.addEventListener('load', () => {
             createBubbles();
             
-            // 注意：由于浏览器限制，YouTube链接无法直接用作音频源
-            // 你需要将音频文件下载并上传到服务器，然后更新src路径
+            // 初始化音频元素
             startAudio = document.getElementById('start-audio');
             gameAudio = document.getElementById('game-audio');
             endingAudio = document.getElementById('ending-audio');
             
-            // 自动播放开始音乐（需要用户交互才能播放）
-            document.addEventListener('click', () => {
+            // 预加载音频
+            if (startAudio) startAudio.load();
+            if (gameAudio) gameAudio.load();
+            if (endingAudio) endingAudio.load();
+            
+            // 页面加载完成后立即播放开始音乐
+            setTimeout(() => {
                 if (startAudio && document.getElementById('start-section').classList.contains('active')) {
-                    startAudio.play().catch(e => console.log('Audio play failed:', e));
+                    startAudio.play().catch(e => {
+                        console.log('Auto play blocked, waiting for user interaction');
+                        // 如果自动播放被阻止，等待用户交互
+                        document.addEventListener('click', () => {
+                            startAudio.play().catch(e => console.log('Audio play failed:', e));
+                        }, { once: true });
+                    });
                 }
-            }, { once: true });
+            }, 500);
         });
     </script>
 </body>
