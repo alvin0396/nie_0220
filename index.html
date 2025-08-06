@@ -409,13 +409,13 @@
 <body>
     <!-- Audio elements -->
     <audio id="introMusic" loop>
-        <source src="https://www.youtube.com/watch?v=aqGhPk73tkU" type="audio/mpeg">
+        <source src="intro-music.mp3" type="audio/mpeg">
     </audio>
     <audio id="quizMusic" loop>
-        <source src="https://www.youtube.com/watch?v=H5ohDQ-umHM" type="audio/mpeg">
+        <source src="quiz-music.mp3" type="audio/mpeg">
     </audio>
     <audio id="endingMusic">
-        <source src="https://www.youtube.com/watch?v=9IP2S9aSWfI" type="audio/mpeg">
+        <source src="ending-music.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Intro Section -->
@@ -549,8 +549,8 @@
             document.getElementById('quizMusic').pause();
             document.getElementById('endingMusic').play();
             
-            // Set background image (you can replace this with the actual image)
-            document.getElementById('endingBg').style.backgroundImage = 'url("data:image/svg+xml,<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 800 600\\"><rect width=\\"800\\" height=\\"600\\" fill=\\"%23FFB6C1\\"/><text x=\\"400\\" y=\\"300\\" text-anchor=\\"middle\\" font-size=\\"24\\" fill=\\"white\\">Your Photo Here</text></svg>")';
+            // Set background image (replace "your-photo.jpg" with your actual photo filename)
+            document.getElementById('endingBg').style.backgroundImage = 'url("your-photo.jpg")';
             
             // Start scrolling message
             document.getElementById('scrollingMessage').textContent = endingMessage;
