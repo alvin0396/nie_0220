@@ -440,7 +440,7 @@
             line-height: 2.5;
             text-align: center;
             text-shadow: 2px 2px 6px var(--shadow-heavy);
-            animation: scrollUp 185s linear;
+            animation: scrollUp 300s linear;
             white-space: pre-line;
             font-weight: 500;
             padding: 0 20px;
@@ -1250,12 +1250,12 @@
                 // 设置文字内容并立即开始滚动
                 scrollingText.textContent = message;
                 
-                // 185秒后文字滚动完全消失，3秒后显示最终消息
-                const finalMessageTimer = setTimeout(() => {
+                // 监听动画结束事件，当最后一行文字消失时显示最终消息
+                scrollingText.addEventListener('animationend', () => {
                     setTimeout(() => {
                         this.showFinalMessage();
                     }, 3000);
-                }, 185000);
+                });
 
                 // 清理定时器（如果需要）
                 this.cleanupTimers = () => {
