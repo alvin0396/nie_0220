@@ -390,11 +390,20 @@
             "你会放下这段感情吗，哪怕错过了就再也没机会遇到了，这样的放下会让你遗憾一辈子吗？"
         ];
 
-        // 背景图片数组（日系动漫风格）
+        // 背景图片数组（12张照片对应12个问题）
         const backgroundImages = [
-            'linear-gradient(rgba(173, 216, 230, 0.8), rgba(135, 206, 250, 0.8)), url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 600\'%3E%3Cpath d=\'M0,300 Q250,200 500,300 T1000,300 L1000,600 L0,600 Z\' fill=\'%23e6f3ff\'/%3E%3Cpath d=\'M0,400 Q250,350 500,400 T1000,400 L1000,600 L0,600 Z\' fill=\'%23cce7ff\'/%3E%3C/svg%3E")',
-            'linear-gradient(rgba(255, 182, 193, 0.8), rgba(255, 160, 122, 0.8)), url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 600\'%3E%3Ccircle cx=\'100\' cy=\'100\' r=\'80\' fill=\'%23ffeb3b\' opacity=\'0.8\'/%3E%3Cpath d=\'M0,500 Q500,400 1000,500 L1000,600 L0,600 Z\' fill=\'%23ff7043\'/%3E%3C/svg%3E")',
-            'linear-gradient(rgba(144, 238, 144, 0.8), rgba(152, 251, 152, 0.8)), url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1000 600\'%3E%3Cpath d=\'M0,450 Q250,350 500,450 T1000,450 L1000,600 L0,600 Z\' fill=\'%2332cd32\'/%3E%3Cpath d=\'M200,300 L250,250 L300,300 L250,350 Z\' fill=\'%2300ff00\'/%3E%3C/svg%3E")'
+            'url("your-photo1.jpg")',
+            'url("your-photo2.jpg")',
+            'url("your-photo3.jpg")',
+            'url("your-photo4.jpg")',
+            'url("your-photo5.jpg")',
+            'url("your-photo6.jpg")',
+            'url("your-photo7.jpg")',
+            'url("your-photo8.jpg")',
+            'url("your-photo9.jpg")',
+            'url("your-photo10.jpg")',
+            'url("your-photo11.jpg")',
+            'url("your-photo12.jpg")'
         ];
 
         let currentQuestion = 0;
@@ -442,10 +451,16 @@
             if (currentQuestion < questions.length) {
                 document.getElementById('question-text').textContent = questions[currentQuestion];
                 
-                // 更换背景，添加平滑过渡
+                // 更换背景，每个问题对应一张特定的照片
                 const gameSection = document.getElementById('game-section');
+                const backgroundImage = backgroundImages[currentQuestion];
+                
+                // 添加平滑过渡效果
                 setTimeout(() => {
-                    gameSection.style.background = backgroundImages[currentQuestion % backgroundImages.length];
+                    gameSection.style.backgroundImage = backgroundImage;
+                    gameSection.style.backgroundSize = 'cover';
+                    gameSection.style.backgroundPosition = 'center';
+                    gameSection.style.backgroundRepeat = 'no-repeat';
                 }, 100);
             }
         }
