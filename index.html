@@ -1183,11 +1183,8 @@
                 // 设置文字内容并立即开始滚动
                 scrollingText.textContent = message;
                 
-                // 185秒后隐藏滚动文字，3秒后显示最终消息
+                // 185秒后文字滚动完全消失，3秒后显示最终消息
                 setTimeout(() => {
-                    if (scrollingText) {
-                        scrollingText.style.opacity = '0';
-                    }
                     setTimeout(() => {
                         this.showFinalMessage();
                     }, 3000);
