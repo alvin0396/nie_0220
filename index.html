@@ -378,7 +378,7 @@
 
         /* 结尾部分样式优化 */
         #ending-section {
-            background: linear-gradient(135deg, rgba(255, 153, 153, 0.7), rgba(255, 204, 204, 0.7));
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
             position: relative;
             overflow: hidden;
         }
@@ -413,7 +413,7 @@
             height: 80%;
             overflow: hidden;
             border-radius: var(--border-radius);
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: var(--blur-light);
         }
 
@@ -425,7 +425,7 @@
             width: 100%;
             color: var(--text-light);
             font-size: clamp(1.2em, 3.5vw, 1.6em);
-            line-height: 2.0;
+            line-height: 2.5;
             text-align: center;
             text-shadow: 2px 2px 6px var(--shadow-heavy);
             animation: scrollUp 170s linear;
@@ -438,10 +438,10 @@
 
         @keyframes scrollUp {
             0% {
-                transform: translateX(-50%) translateY(100%);
+                transform: translateX(-50%) translateY(120%);
             }
             100% {
-                transform: translateX(-50%) translateY(-100%);
+                transform: translateX(-50%) translateY(-120%);
             }
         }
 
