@@ -435,7 +435,7 @@
             line-height: 2.5;
             text-align: center;
             text-shadow: 2px 2px 6px var(--shadow-heavy);
-            animation: scrollUp 185s linear;
+            animation: scrollUp 230s linear;
             animation-play-state: paused;
             white-space: pre-line;
             font-weight: 500;
@@ -1196,15 +1196,17 @@
                     }
                 };
                 
-                // 185秒后隐藏滚动文字，3秒空白后显示最终消息
-                const endAnimation = () => {
+                // 200秒后显示最终消息和星星特效
+                const showFinalMessageTimer = setTimeout(() => {
+                    this.showFinalMessage();
+                }, 200000);
+                
+                // 230秒后隐藏滚动文字
+                const hideTextTimer = setTimeout(() => {
                     if (scrollingText) {
                         scrollingText.style.opacity = '0';
                     }
-                    setTimeout(() => {
-                        this.showFinalMessage();
-                    }, 3000);
-                };
+                }, 230000);
                 
                 // 设置定时器
                 setTimeout(startAnimation, 3000);
