@@ -5,35 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>只给小frennie的游戏☆☆</title>
     <meta name="description" content="一个特别为小frennie制作的爱心游戏">
+    <meta name="theme-color" content="#ff4d94">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
+        /* 基础样式重置 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* 根变量定义 */
+        :root {
+            --primary-color: #ff4d94;
+            --secondary-color: #ff6b9d;
+            --accent-color: #ffd700;
+            --text-light: #fff;
+            --text-dark: #1a1a1a;
+            --bg-gradient: linear-gradient(135deg, #ffb3d9, #ffe6f2);
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-medium: rgba(0, 0, 0, 0.3);
+            --shadow-heavy: rgba(0, 0, 0, 0.7);
+            --border-radius: 20px;
+            --transition: all 0.3s ease;
+            --blur-light: blur(1px);
+            --blur-medium: blur(5px);
+        }
+
+        /* 基础样式 */
         body {
-            font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow: hidden;
             height: 100vh;
             background: #000;
             user-select: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* 加载动画 */
+        /* 加载动画优化 */
         .loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #ffb3d9, #ffe6f2);
+            background: var(--bg-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
             transition: opacity 0.5s ease-out;
+            will-change: opacity;
         }
 
         .loading.hide {
@@ -42,18 +66,25 @@
         }
 
         .loading-text {
-            font-size: 1.5em;
-            color: #ff4d94;
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            color: var(--primary-color);
             font-weight: bold;
             animation: pulse 1.5s ease-in-out infinite;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
+            0%, 100% { 
+                opacity: 0.6; 
+                transform: scale(1); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.05); 
+            }
         }
 
-        /* 通用样式 */
+        /* 通用section样式 */
         .section {
             position: absolute;
             top: 0;
@@ -63,6 +94,7 @@
             display: none;
             opacity: 0;
             transition: opacity 0.8s ease-in-out;
+            will-change: opacity;
         }
 
         .section.active {
@@ -70,9 +102,9 @@
             opacity: 1;
         }
 
-        /* 开始界面样式 */
+        /* 开始界面样式优化 */
         #start-section {
-            background: linear-gradient(135deg, #ffb3d9, #ffe6f2);
+            background: var(--bg-gradient);
             position: relative;
             overflow: hidden;
         }
@@ -92,8 +124,12 @@
         }
 
         @keyframes waveMove {
-            0%, 100% { transform: translateX(0) translateY(0); }
-            50% { transform: translateX(10px) translateY(-10px); }
+            0%, 100% { 
+                transform: translateX(0) translateY(0); 
+            }
+            50% { 
+                transform: translateX(10px) translateY(-10px); 
+            }
         }
 
         .bubble {
@@ -131,46 +167,57 @@
             justify-content: center;
             height: 100%;
             text-align: center;
+            padding: 20px;
         }
 
         .game-title {
             font-size: clamp(2em, 6vw, 3.5em);
             font-weight: bold;
-            color: #ff4d94;
+            color: var(--primary-color);
             margin-bottom: 50px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             animation: titleGlow 3s ease-in-out infinite alternate;
+            will-change: text-shadow;
         }
 
         @keyframes titleGlow {
-            0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); }
-            100% { text-shadow: 2px 2px 8px rgba(255, 77, 148, 0.3), 0 0 20px rgba(255, 182, 193, 0.5); }
+            0% { 
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); 
+            }
+            100% { 
+                text-shadow: 2px 2px 8px rgba(255, 77, 148, 0.3), 0 0 20px rgba(255, 182, 193, 0.5); 
+            }
         }
 
         .star {
-            color: #ffd700;
-            text-shadow: 0 0 10px #ffd700;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-color);
             animation: starTwinkle 2s ease-in-out infinite alternate;
         }
 
         @keyframes starTwinkle {
-            0% { text-shadow: 0 0 10px #ffd700; }
-            100% { text-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700; }
+            0% { 
+                text-shadow: 0 0 10px var(--accent-color); 
+            }
+            100% { 
+                text-shadow: 0 0 20px var(--accent-color), 0 0 30px var(--accent-color); 
+            }
         }
 
         .start-button {
             padding: 20px 40px;
             font-size: clamp(1.2em, 4vw, 1.5em);
-            background: linear-gradient(45deg, #ff6b9d, #ff8fb3);
-            color: white;
+            background: linear-gradient(45deg, var(--secondary-color), #ff8fb3);
+            color: var(--text-light);
             border: none;
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             font-family: inherit;
             position: relative;
             overflow: hidden;
+            font-weight: bold;
         }
 
         .start-button::before {
@@ -197,7 +244,7 @@
             transform: translateY(-1px);
         }
 
-        /* 游戏部分样式 */
+        /* 游戏部分样式优化 */
         #game-section {
             background-size: cover;
             background-position: center;
@@ -213,7 +260,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(0.5px);
+            backdrop-filter: var(--blur-light);
         }
 
         .game-content {
@@ -230,39 +277,47 @@
 
         .instruction {
             font-size: clamp(1em, 3vw, 1.2em);
-            color: #fff;
+            color: var(--text-light);
             margin-bottom: 30px;
             background: rgba(0, 0, 0, 0.1);
             padding: 12px 24px;
             border-radius: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(1px);
+            box-shadow: 0 4px 15px var(--shadow-light);
+            text-shadow: 1px 1px 2px var(--shadow-heavy);
+            backdrop-filter: var(--blur-light);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
         }
 
         .question {
             font-size: clamp(1.2em, 4vw, 2em);
             font-weight: bold;
-            color: #fff;
+            color: var(--text-light);
             margin-bottom: 40px;
             background: rgba(0, 0, 0, 0.1);
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 30px var(--shadow-light);
             max-width: 90%;
             width: 100%;
             max-width: 800px;
             line-height: 1.4;
             text-shadow: 2px 2px 6px rgba(0, 0, 0, 1);
-            backdrop-filter: blur(1px);
+            backdrop-filter: var(--blur-light);
             border: 1px solid rgba(255, 255, 255, 0.2);
             animation: questionAppear 0.6s ease-out;
+            will-change: transform, opacity;
         }
 
         @keyframes questionAppear {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
 
         .answer-buttons {
@@ -277,12 +332,12 @@
             font-size: clamp(1.1em, 3vw, 1.3em);
             border: 3px solid rgba(52, 152, 219, 0.9);
             background: rgba(255, 255, 255, 0.8);
-            color: #1a1a1a;
+            color: var(--text-dark);
             border-radius: 25px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            box-shadow: 0 4px 15px var(--shadow-medium);
+            backdrop-filter: var(--blur-medium);
             font-weight: bold;
             font-family: inherit;
             min-width: 120px;
@@ -311,7 +366,7 @@
 
         .answer-btn:hover {
             background: rgba(52, 152, 219, 0.8);
-            color: white;
+            color: var(--text-light);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
             border-color: rgba(52, 152, 219, 1);
@@ -321,7 +376,7 @@
             transform: translateY(0);
         }
 
-        /* 结尾部分样式 */
+        /* 结尾部分样式优化 */
         #ending-section {
             background: linear-gradient(135deg, rgba(255, 153, 153, 0.7), rgba(255, 204, 204, 0.7));
             position: relative;
@@ -341,8 +396,6 @@
             z-index: 1;
         }
 
-
-
         .ending-content {
             position: relative;
             z-index: 10;
@@ -359,9 +412,9 @@
             width: min(90%, 800px);
             height: 80%;
             overflow: hidden;
-            border-radius: 20px;
+            border-radius: var(--border-radius);
             background: rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(2px);
+            backdrop-filter: var(--blur-light);
         }
 
         .scrolling-text {
@@ -370,16 +423,17 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            color: white;
+            color: var(--text-light);
             font-size: clamp(1.2em, 3.5vw, 1.6em);
             line-height: 2.0;
             text-align: center;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+            text-shadow: 2px 2px 6px var(--shadow-heavy);
             animation: scrollUp 170s linear;
             white-space: pre-line;
             font-weight: 500;
             padding: 0 20px;
             transition: opacity 1s ease-out;
+            will-change: transform;
         }
 
         @keyframes scrollUp {
@@ -398,16 +452,16 @@
             transform: translate(-50%, -50%);
             font-size: clamp(1.5em, 5vw, 2.5em);
             font-weight: bold;
-            color: #fff;
-            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9);
+            color: var(--text-light);
+            text-shadow: 3px 3px 8px var(--shadow-heavy);
             opacity: 0;
             text-align: center;
             z-index: 20;
-            padding: 0 20px;
-            background: rgba(0, 0, 0, 0.3);
             padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: var(--blur-medium);
+            will-change: opacity, transform;
         }
 
         .final-message.show {
@@ -428,28 +482,29 @@
 
         .celestial {
             position: absolute;
-            color: #ffd700;
+            color: var(--accent-color);
             font-size: clamp(1.5em, 4vw, 2em);
             animation: twinkle 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 15px #ffd700);
-            text-shadow: 0 0 20px #ffd700;
+            filter: drop-shadow(0 0 15px var(--accent-color));
+            text-shadow: 0 0 20px var(--accent-color);
+            will-change: transform, opacity;
         }
 
         @keyframes twinkle {
             0% { 
                 opacity: 0.4; 
                 transform: scale(0.8) rotate(0deg); 
-                filter: drop-shadow(0 0 10px #ffd700);
+                filter: drop-shadow(0 0 10px var(--accent-color));
             }
             50% { 
                 opacity: 1; 
                 transform: scale(1.3) rotate(180deg); 
-                filter: drop-shadow(0 0 25px #ffd700);
+                filter: drop-shadow(0 0 25px var(--accent-color));
             }
             100% { 
                 opacity: 0.4; 
                 transform: scale(0.8) rotate(360deg); 
-                filter: drop-shadow(0 0 10px #ffd700);
+                filter: drop-shadow(0 0 10px var(--accent-color));
             }
         }
 
@@ -468,7 +523,7 @@
             100% { text-shadow: 0 0 40px #f0f0f0, 0 0 60px #f0f0f0; }
         }
 
-        /* 音频控制 */
+        /* 音频控制优化 */
         .audio-control {
             position: fixed;
             top: 20px;
@@ -482,10 +537,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            color: white;
+            color: var(--text-light);
             font-size: 1.2em;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            backdrop-filter: var(--blur-medium);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .audio-control:hover {
@@ -493,7 +549,7 @@
             transform: scale(1.1);
         }
 
-        /* 进度指示器 */
+        /* 进度指示器优化 */
         .progress-indicator {
             position: fixed;
             bottom: 20px;
@@ -509,15 +565,17 @@
             height: 12px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .progress-dot.active {
-            background: #ff6b9d;
-            box-shadow: 0 0 10px #ff6b9d;
+            background: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+            transform: scale(1.2);
         }
 
-        /* 响应式设计 */
+        /* 响应式设计优化 */
         @media (max-width: 768px) {
             .answer-buttons {
                 flex-direction: column;
@@ -568,6 +626,24 @@
                 display: none !important;
             }
         }
+
+        /* 焦点样式优化 */
+        .start-button:focus,
+        .answer-btn:focus,
+        .audio-control:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* 加载优化 */
+        .lazy-load {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .lazy-load.loaded {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -601,7 +677,6 @@
     <!-- 结尾部分 -->
     <div id="ending-section" class="section">
         <div class="ending-background" id="ending-background"></div>
-
         <div class="ending-content">
             <div class="message-container">
                 <div class="scrolling-text" id="scrolling-text"></div>
@@ -634,19 +709,26 @@
     </audio>
 
     <script>
-        // 游戏状态管理
+        // 游戏状态管理 - 优化版本
         class GameState {
             constructor() {
                 this.currentQuestion = 0;
                 this.audioEnabled = true;
                 this.isTransitioning = false;
                 this.preloadedImages = new Map();
+                this.isInitialized = false;
+                this.resourcesLoaded = false;
+            }
+
+            reset() {
+                this.currentQuestion = 0;
+                this.isTransitioning = false;
             }
         }
 
         const gameState = new GameState();
 
-        // 问题数组
+        // 问题数组 - 优化结构
         const questions = [
             "你心里还有他吗？",
             "为什么你是否看到他的时候会感到伤心和难过？",
@@ -678,11 +760,12 @@
             'your-photo12.jpg'
         ];
 
+        // 音频引用
         let startAudio, gameAudio, endingAudio;
 
-        // 工具函数
+        // 工具函数 - 优化版本
         const utils = {
-            // 防抖函数
+            // 防抖函数优化
             debounce(func, wait) {
                 let timeout;
                 return function executedFunction(...args) {
@@ -695,7 +778,21 @@
                 };
             },
 
-            // 预加载图片
+            // 节流函数
+            throttle(func, limit) {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            },
+
+            // 预加载图片优化
             preloadImage(src) {
                 return new Promise((resolve, reject) => {
                     if (gameState.preloadedImages.has(src)) {
@@ -713,19 +810,25 @@
                 });
             },
 
-            // 批量预加载图片
+            // 批量预加载图片优化
             async preloadImages(srcs) {
                 const promises = srcs.map(src => this.preloadImage(src).catch(() => null));
                 return Promise.allSettled(promises);
             },
 
-            // 平滑切换section
+            // 平滑切换section优化
             switchSection(fromId, toId) {
                 if (gameState.isTransitioning) return;
                 gameState.isTransitioning = true;
 
                 const fromSection = document.getElementById(fromId);
                 const toSection = document.getElementById(toId);
+
+                if (!fromSection || !toSection) {
+                    console.error('Section not found');
+                    gameState.isTransitioning = false;
+                    return;
+                }
 
                 // 淡出当前section
                 fromSection.style.opacity = '0';
@@ -740,10 +843,16 @@
                         gameState.isTransitioning = false;
                     });
                 }, 300);
+            },
+
+            // 错误处理
+            handleError(error, context) {
+                console.error(`Error in ${context}:`, error);
+                // 可以添加用户友好的错误提示
             }
         };
 
-        // 音频管理
+        // 音频管理 - 优化版本
         const audioManager = {
             init() {
                 startAudio = document.getElementById('start-audio');
@@ -758,7 +867,7 @@
                         
                         // 错误处理
                         audio.addEventListener('error', (e) => {
-                            console.warn('音频加载失败:', e.target.src);
+                            utils.handleError(e, 'Audio loading');
                         });
                     }
                 });
@@ -771,7 +880,7 @@
                     audio.currentTime = 0;
                     await audio.play();
                 } catch (e) {
-                    console.warn('音频播放失败:', e);
+                    utils.handleError(e, 'Audio playback');
                 }
             },
 
@@ -787,11 +896,9 @@
                 
                 if (gameState.audioEnabled) {
                     icon.textContent = '🔊';
-                    // 恢复当前应该播放的音频
                     this.resumeCurrentAudio();
                 } else {
                     icon.textContent = '🔇';
-                    // 暂停所有音频
                     [startAudio, gameAudio, endingAudio].forEach(audio => {
                         if (audio) audio.pause();
                     });
@@ -813,17 +920,19 @@
             }
         };
 
-        // 进度指示器
+        // 进度指示器 - 优化版本
         const progressIndicator = {
             init() {
                 const container = document.getElementById('progress-indicator');
+                if (!container) return;
+                
                 container.innerHTML = '';
                 
                 // 创建进度点：开始 + 12个问题 + 结尾 = 14个点
                 for (let i = 0; i < 14; i++) {
                     const dot = document.createElement('div');
                     dot.className = 'progress-dot';
-                    if (i === 0) dot.classList.add('active'); // 开始界面激活
+                    if (i === 0) dot.classList.add('active');
                     container.appendChild(dot);
                 }
             },
@@ -836,12 +945,14 @@
             }
         };
 
-        // 泡泡效果管理
+        // 泡泡效果管理 - 优化版本
         const bubbleManager = {
             intervalId: null,
             
             start() {
                 const container = document.getElementById('start-section');
+                if (!container) return;
+                
                 this.intervalId = setInterval(() => {
                     if (!document.getElementById('start-section').classList.contains('active')) {
                         return;
@@ -870,7 +981,7 @@
             }
         };
 
-        // 游戏核心功能
+        // 游戏核心功能 - 优化版本
         const gameCore = {
             async startGame() {
                 if (gameState.isTransitioning) return;
@@ -882,10 +993,10 @@
                 
                 await audioManager.play(gameAudio);
                 this.showQuestion();
-                progressIndicator.update(1); // 进入游戏部分
+                progressIndicator.update(1);
             },
 
-                         async showQuestion() {
+            async showQuestion() {
                 if (gameState.currentQuestion >= questions.length) {
                     this.showEnding();
                     return;
@@ -893,6 +1004,11 @@
 
                 const questionElement = document.getElementById('question-text');
                 const instructionElement = document.getElementById('instruction');
+                
+                if (!questionElement || !instructionElement) {
+                    utils.handleError('Question elements not found', 'showQuestion');
+                    return;
+                }
                 
                 // 只在第一题显示说明
                 if (gameState.currentQuestion === 0) {
@@ -908,23 +1024,24 @@
                 try {
                     await utils.preloadImage(imageSrc);
                     const gameSection = document.getElementById('game-section');
-                    gameSection.style.backgroundImage = `url("${imageSrc}")`;
+                    if (gameSection) {
+                        gameSection.style.backgroundImage = `url("${imageSrc}")`;
+                    }
                 } catch (e) {
-                    console.warn('背景图片加载失败:', imageSrc);
+                    utils.handleError(e, 'Background image loading');
                 }
                 
                 setTimeout(() => {
                     questionElement.textContent = questions[gameState.currentQuestion];
                     questionElement.style.opacity = '1';
-                    progressIndicator.update(gameState.currentQuestion + 2); // +2 因为包含开始界面
+                    progressIndicator.update(gameState.currentQuestion + 2);
                 }, 300);
             },
 
-                         nextQuestion: utils.debounce(function() {
-                // 确保问题已经显示完成再允许下一步
+            nextQuestion: utils.debounce(function() {
                 const questionElement = document.getElementById('question-text');
-                if (questionElement.style.opacity === '0' || !questionElement.textContent) {
-                    return; // 如果问题还没显示完成，忽略点击
+                if (!questionElement || questionElement.style.opacity === '0' || !questionElement.textContent) {
+                    return;
                 }
                 
                 gameState.currentQuestion++;
@@ -942,16 +1059,18 @@
                 const endingBg = document.getElementById('ending-background');
                 try {
                     await utils.preloadImage('couple-photo.jpg');
-                    endingBg.style.backgroundImage = 'url("couple-photo.jpg")';
+                    if (endingBg) {
+                        endingBg.style.backgroundImage = 'url("couple-photo.jpg")';
+                    }
                 } catch (e) {
-                    console.warn('情侣照片加载失败');
+                    utils.handleError(e, 'Couple photo loading');
                 }
                 
                 utils.switchSection('game-section', 'ending-section');
                 await audioManager.play(endingAudio);
                 
                 this.startScrollingText();
-                progressIndicator.update(13); // 最后一步
+                progressIndicator.update(13);
             },
 
             startScrollingText() {
@@ -1034,25 +1153,33 @@
 都能快快乐乐`;
 
                 const scrollingText = document.getElementById('scrolling-text');
-                scrollingText.textContent = message;
+                if (scrollingText) {
+                    scrollingText.textContent = message;
+                }
                 
                 // 170秒后隐藏滚动文字，3秒空白后显示最终消息
                 setTimeout(() => {
-                    scrollingText.style.opacity = '0';
+                    if (scrollingText) {
+                        scrollingText.style.opacity = '0';
+                    }
                     setTimeout(() => {
                         this.showFinalMessage();
                     }, 3000);
-                }, 170000); // 170秒
+                }, 170000);
             },
 
             showFinalMessage() {
                 const finalMessage = document.getElementById('final-message');
-                finalMessage.classList.add('show');
+                if (finalMessage) {
+                    finalMessage.classList.add('show');
+                }
                 this.createStars();
             },
 
-                         createStars() {
+            createStars() {
                 const container = document.getElementById('ending-section');
+                if (!container) return;
+                
                 const starCount = 12;
                 
                 for (let i = 0; i < starCount; i++) {
@@ -1064,8 +1191,8 @@
                         // 随机位置，避免重叠
                         let top, left;
                         do {
-                            top = Math.random() * 80 + 10; // 10-90%
-                            left = Math.random() * 80 + 10; // 10-90%
+                            top = Math.random() * 80 + 10;
+                            left = Math.random() * 80 + 10;
                         } while (this.isPositionTooClose(top, left, container));
                         
                         star.style.top = top + '%';
@@ -1088,7 +1215,7 @@
                     const starTop = parseFloat(star.style.top);
                     const starLeft = parseFloat(star.style.left);
                     const distance = Math.sqrt(Math.pow(top - starTop, 2) + Math.pow(left - starLeft, 2));
-                    if (distance < 15) return true; // 最小距离15%
+                    if (distance < 15) return true;
                 }
                 return false;
             },
@@ -1122,12 +1249,12 @@
             audioManager.toggle();
         }
 
-        // 初始化
+        // 初始化 - 优化版本
         async function init() {
             try {
                 // 预加载关键资源
                 await Promise.all([
-                    utils.preloadImages(backgroundImages.slice(0, 3)), // 预加载前3张图片
+                    utils.preloadImages(backgroundImages.slice(0, 3)),
                     utils.preloadImage('couple-photo.jpg').catch(() => null)
                 ]);
                 
@@ -1136,13 +1263,20 @@
                 progressIndicator.init();
                 bubbleManager.start();
                 
+                gameState.isInitialized = true;
+                gameState.resourcesLoaded = true;
+                
                 // 隐藏加载界面
                 setTimeout(() => {
-                    document.getElementById('loading').classList.add('hide');
+                    const loading = document.getElementById('loading');
+                    if (loading) {
+                        loading.classList.add('hide');
+                    }
                 }, 500);
                 
                 // 立即尝试自动播放开始音乐
-                if (document.getElementById('start-section').classList.contains('active')) {
+                const startSection = document.getElementById('start-section');
+                if (startSection && startSection.classList.contains('active')) {
                     audioManager.play(startAudio).catch(() => {
                         // 如果自动播放失败，设置点击后播放
                         const playOnClick = () => {
@@ -1154,8 +1288,11 @@
                 }
                 
             } catch (error) {
-                console.error('初始化失败:', error);
-                document.getElementById('loading').classList.add('hide');
+                utils.handleError(error, 'Initialization');
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.classList.add('hide');
+                }
             }
         }
 
@@ -1181,12 +1318,22 @@
 
         // 错误处理
         window.addEventListener('error', (e) => {
-            console.error('页面错误:', e.error);
+            utils.handleError(e.error, 'Global error');
         });
 
         window.addEventListener('unhandledrejection', (e) => {
-            console.error('未处理的Promise拒绝:', e.reason);
+            utils.handleError(e.reason, 'Unhandled promise rejection');
         });
+
+        // 性能监控
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+                }, 0);
+            });
+        }
     </script>
 </body>
 </html>
