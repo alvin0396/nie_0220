@@ -435,8 +435,7 @@
             line-height: 2.5;
             text-align: center;
             text-shadow: 2px 2px 6px var(--shadow-heavy);
-            animation: scrollUp 230s linear;
-            animation-play-state: paused;
+            animation: scrollUp 185s linear;
             white-space: pre-line;
             font-weight: 500;
             padding: 0 20px;
@@ -1181,36 +1180,18 @@
                     return;
                 }
 
-                // 设置文字内容
+                // 设置文字内容并立即开始滚动
                 scrollingText.textContent = message;
                 
-                // 初始化动画状态
-                scrollingText.style.animationPlayState = 'paused';
-                scrollingText.style.opacity = '0';
-                
-                // 3秒后开始字幕动画
-                const startAnimation = () => {
-                    if (scrollingText) {
-                        scrollingText.style.opacity = '1';
-                        scrollingText.style.animationPlayState = 'running';
-                    }
-                };
-                
-                // 200秒后显示最终消息和星星特效
-                const showFinalMessageTimer = setTimeout(() => {
-                    this.showFinalMessage();
-                }, 200000);
-                
-                // 230秒后隐藏滚动文字
-                const hideTextTimer = setTimeout(() => {
+                // 185秒后隐藏滚动文字，3秒后显示最终消息
+                setTimeout(() => {
                     if (scrollingText) {
                         scrollingText.style.opacity = '0';
                     }
-                }, 230000);
-                
-                // 设置定时器
-                setTimeout(startAnimation, 3000);
-                setTimeout(endAnimation, 185000);
+                    setTimeout(() => {
+                        this.showFinalMessage();
+                    }, 3000);
+                }, 185000);
             },
 
             showFinalMessage() {
