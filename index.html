@@ -549,8 +549,24 @@
             document.getElementById('quizMusic').pause();
             document.getElementById('endingMusic').play();
             
-            // Set background image (replace "your-photo.jpg" with your actual photo filename)
-            document.getElementById('endingBg').style.backgroundImage = 'url("your-photo.jpg")';
+            // Set up photo slideshow
+            const photos = ['your-photo1.jpg', 'your-photo2.jpg', 'your-photo3.jpg']; // 添加你所有的照片文件名
+            let currentPhotoIndex = 0;
+            
+            // Set initial background image
+            document.getElementById('endingBg').style.backgroundImage = `url("${photos[currentPhotoIndex]}")`;
+            
+            // Change photos every 8 seconds during the message
+            const photoInterval = setInterval(() => {
+                currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+                document.getElementById('endingBg').style.backgroundImage = `url("${photos[currentPhotoIndex]}")`;
+                document.getElementById('endingBg').style.transition = 'background-image 1s ease-in-out';
+            }, 8000);
+            
+            // Stop photo changing after message ends
+            setTimeout(() => {
+                clearInterval(photoInterval);
+            }, 45000);
             
             // Start scrolling message
             document.getElementById('scrollingMessage').textContent = endingMessage;
