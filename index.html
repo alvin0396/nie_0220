@@ -258,7 +258,7 @@
             line-height: 2.0;
             text-align: center;
             text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
-            animation: scrollUp 110s linear;
+            animation: scrollUp 180s linear;
             white-space: pre-line;
             font-weight: 500;
         }
@@ -580,14 +580,14 @@
             const scrollingText = document.getElementById('scrolling-text');
             scrollingText.textContent = message;
             
-            // 1分50秒后隐藏滚动文字，3秒空白后显示最终消息
+            // 3分钟后隐藏滚动文字，3秒空白后显示最终消息
             setTimeout(() => {
                 scrollingText.style.opacity = '0';
                 // 3秒后显示最终消息
                 setTimeout(() => {
                     showFinalMessage();
                 }, 3000);
-            }, 110000); // 1分50秒 = 110秒
+            }, 180000); // 3分钟 = 180秒
         }
 
         // 显示最终消息
