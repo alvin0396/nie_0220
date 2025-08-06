@@ -381,6 +381,7 @@
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
             position: relative;
             overflow: hidden;
+            will-change: transform;
         }
 
         .ending-background {
@@ -394,6 +395,8 @@
             background-repeat: no-repeat;
             opacity: 0.9;
             z-index: 1;
+            will-change: opacity;
+            transition: opacity 0.5s ease-in-out;
         }
 
         .ending-content {
@@ -405,6 +408,7 @@
             justify-content: center;
             height: 100%;
             padding: 40px 20px;
+            will-change: transform;
         }
 
         .message-container {
@@ -415,6 +419,9 @@
             border-radius: var(--border-radius);
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: var(--blur-light);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            will-change: transform;
         }
 
         .scrolling-text {
@@ -435,6 +442,8 @@
             padding: 0 20px;
             transition: opacity 1s ease-out;
             will-change: transform;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
         }
 
         @keyframes scrollUp {
@@ -463,6 +472,10 @@
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: var(--blur-medium);
             will-change: opacity, transform;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .final-message.show {
@@ -489,6 +502,9 @@
             filter: drop-shadow(0 0 15px var(--accent-color));
             text-shadow: 0 0 20px var(--accent-color);
             will-change: transform, opacity;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            pointer-events: none;
         }
 
         @keyframes twinkle {
@@ -517,6 +533,8 @@
             color: #f0f0f0;
             text-shadow: 0 0 20px #f0f0f0;
             animation: moonGlow 4s ease-in-out infinite alternate;
+            will-change: text-shadow;
+            pointer-events: none;
         }
 
         @keyframes moonGlow {
@@ -1054,24 +1072,28 @@
             }, 500),
 
             async showEnding() {
-                audioManager.stop(gameAudio);
-                
-                // 设置情侣照片背景
-                const endingBg = document.getElementById('ending-background');
                 try {
-                    await utils.preloadImage('couple-photo.jpg');
+                    audioManager.stop(gameAudio);
+                    
+                    // 设置情侣照片背景
+                    const endingBg = document.getElementById('ending-background');
                     if (endingBg) {
-                        endingBg.style.backgroundImage = 'url("couple-photo.jpg")';
+                        try {
+                            await utils.preloadImage('couple-photo.jpg');
+                            endingBg.style.backgroundImage = 'url("couple-photo.jpg")';
+                        } catch (e) {
+                            utils.handleError(e, 'Couple photo loading');
+                        }
                     }
-                } catch (e) {
-                    utils.handleError(e, 'Couple photo loading');
+                    
+                    utils.switchSection('game-section', 'ending-section');
+                    await audioManager.play(endingAudio);
+                    
+                    this.startScrollingText();
+                    progressIndicator.update(13);
+                } catch (error) {
+                    utils.handleError(error, 'showEnding');
                 }
-                
-                utils.switchSection('game-section', 'ending-section');
-                await audioManager.play(endingAudio);
-                
-                this.startScrollingText();
-                progressIndicator.update(13);
             },
 
             startScrollingText() {
@@ -1154,46 +1176,64 @@
 都能快快乐乐`;
 
                 const scrollingText = document.getElementById('scrolling-text');
-                if (scrollingText) {
-                    scrollingText.textContent = message;
-                    // 先暂停动画
-                    scrollingText.style.animationPlayState = 'paused';
-                    scrollingText.style.opacity = '0';
+                if (!scrollingText) {
+                    utils.handleError('Scrolling text element not found', 'startScrollingText');
+                    return;
                 }
+
+                // 设置文字内容
+                scrollingText.textContent = message;
+                
+                // 初始化动画状态
+                scrollingText.style.animationPlayState = 'paused';
+                scrollingText.style.opacity = '0';
                 
                 // 3秒后开始字幕动画
-                setTimeout(() => {
+                const startAnimation = () => {
                     if (scrollingText) {
                         scrollingText.style.opacity = '1';
                         scrollingText.style.animationPlayState = 'running';
                     }
-                }, 3000);
+                };
                 
                 // 185秒后隐藏滚动文字，3秒空白后显示最终消息
-                setTimeout(() => {
+                const endAnimation = () => {
                     if (scrollingText) {
                         scrollingText.style.opacity = '0';
                     }
                     setTimeout(() => {
                         this.showFinalMessage();
                     }, 3000);
-                }, 185000);
+                };
+                
+                // 设置定时器
+                setTimeout(startAnimation, 3000);
+                setTimeout(endAnimation, 185000);
             },
 
             showFinalMessage() {
-                const finalMessage = document.getElementById('final-message');
-                if (finalMessage) {
-                    finalMessage.classList.add('show');
+                try {
+                    const finalMessage = document.getElementById('final-message');
+                    if (finalMessage) {
+                        finalMessage.classList.add('show');
+                    }
+                    this.createStars();
+                } catch (error) {
+                    utils.handleError(error, 'showFinalMessage');
                 }
-                this.createStars();
             },
 
             createStars() {
                 const container = document.getElementById('ending-section');
-                if (!container) return;
+                if (!container) {
+                    utils.handleError('Ending section not found', 'createStars');
+                    return;
+                }
                 
                 const starCount = 12;
+                const stars = [];
                 
+                // 创建星星
                 for (let i = 0; i < starCount; i++) {
                     setTimeout(() => {
                         const star = document.createElement('div');
@@ -1205,13 +1245,15 @@
                         do {
                             top = Math.random() * 80 + 10;
                             left = Math.random() * 80 + 10;
-                        } while (this.isPositionTooClose(top, left, container));
+                        } while (this.isPositionTooClose(top, left, stars));
                         
                         star.style.top = top + '%';
                         star.style.left = left + '%';
                         star.style.animationDelay = Math.random() * 3 + 's';
                         star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                        
                         container.appendChild(star);
+                        stars.push(star);
                         
                         // 5秒后移动到新位置
                         setTimeout(() => {
@@ -1221,8 +1263,7 @@
                 }
             },
             
-            isPositionTooClose(top, left, container) {
-                const existingStars = container.querySelectorAll('.celestial');
+            isPositionTooClose(top, left, existingStars) {
                 for (let star of existingStars) {
                     const starTop = parseFloat(star.style.top);
                     const starLeft = parseFloat(star.style.left);
@@ -1233,6 +1274,8 @@
             },
             
             moveStarToNewPosition(star, container) {
+                if (!star || !container) return;
+                
                 const moveInterval = setInterval(() => {
                     let newTop, newLeft;
                     do {
