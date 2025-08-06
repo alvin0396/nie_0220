@@ -382,6 +382,7 @@
             position: relative;
             overflow: hidden;
             will-change: transform;
+            min-height: 100vh;
         }
 
         .ending-background {
@@ -397,6 +398,7 @@
             z-index: 1;
             will-change: opacity;
             transition: opacity 0.5s ease-in-out;
+            object-fit: contain;
         }
 
         .ending-content {
@@ -422,6 +424,9 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.1);
             will-change: transform;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .scrolling-text {
@@ -443,6 +448,8 @@
             will-change: transform;
             backface-visibility: hidden;
             transform-style: preserve-3d;
+            user-select: none;
+            pointer-events: none;
         }
 
         @keyframes scrollUp {
@@ -475,6 +482,8 @@
             transform-style: preserve-3d;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            user-select: none;
+            pointer-events: none;
         }
 
         .final-message.show {
@@ -504,6 +513,8 @@
             backface-visibility: hidden;
             transform-style: preserve-3d;
             pointer-events: none;
+            user-select: none;
+            z-index: 15;
         }
 
         @keyframes twinkle {
@@ -534,6 +545,8 @@
             animation: moonGlow 4s ease-in-out infinite alternate;
             will-change: text-shadow;
             pointer-events: none;
+            user-select: none;
+            z-index: 5;
         }
 
         @keyframes moonGlow {
@@ -661,6 +674,52 @@
 
         .lazy-load.loaded {
             opacity: 1;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            .message-container {
+                width: 95%;
+                height: 85%;
+            }
+            
+            .scrolling-text {
+                font-size: clamp(1em, 3vw, 1.4em);
+                line-height: 2.2;
+            }
+            
+            .final-message {
+                font-size: clamp(1.3em, 4vw, 2.2em);
+                padding: 25px;
+            }
+            
+            .moon {
+                top: 5%;
+                right: 5%;
+                font-size: clamp(1.5em, 5vw, 3em);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ending-content {
+                padding: 20px 15px;
+            }
+            
+            .message-container {
+                width: 98%;
+                height: 90%;
+            }
+            
+            .scrolling-text {
+                font-size: clamp(0.9em, 2.8vw, 1.3em);
+                line-height: 2.0;
+                padding: 0 15px;
+            }
+            
+            .final-message {
+                font-size: clamp(1.2em, 3.5vw, 2em);
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -1072,9 +1131,10 @@
 
             async showEnding() {
                 try {
+                    // 停止游戏音频
                     audioManager.stop(gameAudio);
                     
-                    // 设置情侣照片背景
+                    // 预加载并设置情侣照片背景
                     const endingBg = document.getElementById('ending-background');
                     if (endingBg) {
                         try {
@@ -1085,10 +1145,16 @@
                         }
                     }
                     
+                    // 切换到结尾部分
                     utils.switchSection('game-section', 'ending-section');
+                    
+                    // 播放结尾音乐
                     await audioManager.play(endingAudio);
                     
+                    // 开始字幕滚动
                     this.startScrollingText();
+                    
+                    // 更新进度指示器
                     progressIndicator.update(13);
                 } catch (error) {
                     utils.handleError(error, 'showEnding');
@@ -1096,6 +1162,7 @@
             },
 
             startScrollingText() {
+                // 字幕内容
                 const message = `其实答案并不重要，小傻瓜
 别再钻牛角尖啦
 也别再想到我就痛苦了噢
@@ -1184,11 +1251,16 @@
                 scrollingText.textContent = message;
                 
                 // 185秒后文字滚动完全消失，3秒后显示最终消息
-                setTimeout(() => {
+                const finalMessageTimer = setTimeout(() => {
                     setTimeout(() => {
                         this.showFinalMessage();
                     }, 3000);
                 }, 185000);
+
+                // 清理定时器（如果需要）
+                this.cleanupTimers = () => {
+                    clearTimeout(finalMessageTimer);
+                };
             },
 
             showFinalMessage() {
