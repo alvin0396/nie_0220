@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>只给小frennie的游戏☆☆</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Sans SC', sans-serif;
+      background: #ffe6f0;
+      overflow: hidden;
+    }
+    .container {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      background-image: radial-gradient(circle, #fff 10%, transparent 11%), radial-gradient(circle, #fff 10%, transparent 11%);
+      background-position: 0 0, 25px 25px;
+      background-size: 50px 50px;
+      animation: bubble 20s linear infinite;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #ff66a3;
+    }
+    .stars {
+      color: gold;
+    }
+    .start-btn {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 25px;
+      background-color: #ff99c8;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+    .start-btn:hover {
+      background-color: #ff66a3;
+    }
+    .bubble {
+      position: absolute;
+      bottom: -150px;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      animation: float 12s infinite ease-in;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
+    @keyframes bubble {
+      0% { background-position: 0 0, 25px 25px; }
+      100% { background-position: 0 -1000px, 25px -975px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>只给小frennie的游戏<span class="stars">☆☆</span></h1>
+    <button class="start-btn" onclick="startGame()">开始游戏</button>
+    <!-- Bubbles -->
+    <div class="bubble" style="left:10%"></div>
+    <div class="bubble" style="left:25%; animation-delay: 2s;"></div>
+    <div class="bubble" style="left:40%; animation-delay: 4s;"></div>
+    <div class="bubble" style="left:60%; animation-delay: 1s;"></div>
+    <div class="bubble" style="left:75%; animation-delay: 3s;"></div>
+    <div class="bubble" style="left:90%; animation-delay: 5s;"></div>
+  </div>
+
+  <audio id="introMusic" autoplay loop>
+    <source src="intro_music.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    function startGame() {
+      window.location.href = "game.html";
+    }
+  </script>
+</body>
+</html>
