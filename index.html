@@ -507,21 +507,24 @@
 
         .moon {
             position: absolute;
-            top: 10%;
-            right: 10%;
-            font-size: clamp(2em, 6vw, 4em);
+            top: 8%;
+            left: 8%;
+            right: auto;
+            font-size: clamp(3em, 12vw, 7em);
             color: #f0f0f0;
-            text-shadow: 0 0 20px #f0f0f0;
+            text-shadow: 0 0 30px #f0f0f0;
             animation: moonGlow 4s ease-in-out infinite alternate;
             will-change: text-shadow;
             pointer-events: none;
             user-select: none;
             z-index: 5;
         }
-
-        @keyframes moonGlow {
-            0% { text-shadow: 0 0 20px #f0f0f0; }
-            100% { text-shadow: 0 0 40px #f0f0f0, 0 0 60px #f0f0f0; }
+        @media (max-width: 600px) {
+            .moon {
+                top: 4%;
+                left: 4%;
+                font-size: clamp(2em, 10vw, 5em);
+            }
         }
 
         /* 音频控制优化 */
@@ -1112,22 +1115,17 @@
                 const instructionElement = document.getElementById('instruction');
                 const gameSection = document.getElementById('game-section');
                 const answerBtns = document.querySelectorAll('.answer-btn');
-                
                 if (!questionElement || !instructionElement || !gameSection) {
                     utils.handleError('Question elements not found', 'showQuestion');
                     return;
                 }
-                // 禁用选择按钮
+                // 禁用选择按钮，视觉反馈流畅
                 answerBtns.forEach(btn => {
                     btn.disabled = true;
                     btn.classList.add('disabled');
                 });
                 // 只在第一题显示说明
-                if (gameState.currentQuestion === 0) {
-                    instructionElement.style.display = 'block';
-                } else {
-                    instructionElement.style.display = 'none';
-                }
+                instructionElement.style.display = (gameState.currentQuestion === 0) ? 'block' : 'none';
                 // 立即切换题目和背景（加模糊滤镜，保证同步）
                 const imageSrc = backgroundImages[gameState.currentQuestion];
                 gameSection.style.backgroundImage = `url("${imageSrc}")`;
