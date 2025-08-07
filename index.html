@@ -728,6 +728,38 @@
                 padding: 20px;
             }
         }
+
+        /* 第二部分竖屏适配背景图 */
+        @media (max-aspect-ratio: 3/4), (max-width: 600px) and (orientation: portrait) {
+            #game-section {
+                background-size: contain !important;
+                background-position: center center !important;
+                background-repeat: no-repeat !important;
+            }
+        }
+
+        /* 第三部分月亮移动到左上角避免遮挡 */
+        .moon {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            right: auto;
+            font-size: clamp(2em, 6vw, 4em);
+            color: #f0f0f0;
+            text-shadow: 0 0 20px #f0f0f0;
+            animation: moonGlow 4s ease-in-out infinite alternate;
+            will-change: text-shadow;
+            pointer-events: none;
+            user-select: none;
+            z-index: 5;
+        }
+        @media (max-width: 600px) {
+            .moon {
+                top: 5%;
+                left: 5%;
+                font-size: clamp(1.5em, 5vw, 3em);
+            }
+        }
     </style>
 </head>
 <body>
