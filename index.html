@@ -28,7 +28,7 @@
             --shadow-medium: rgba(0, 0, 0, 0.3);
             --shadow-heavy: rgba(0, 0, 0, 0.7);
             --border-radius: 20px;
-            --transition: all 0.3s ease;
+            --transition: all 0.3s cubic-bezier(.4,2,.6,1);
             --blur-light: blur(1px);
             --blur-medium: blur(5px);
         }
@@ -93,7 +93,7 @@
             height: 100%;
             display: none;
             opacity: 0;
-            transition: opacity 0.8s ease-in-out;
+            transition: opacity 0.8s cubic-bezier(.4,2,.6,1);
             will-change: opacity;
         }
 
@@ -210,16 +210,18 @@
             background: linear-gradient(45deg, var(--secondary-color), #ff8fb3);
             color: var(--text-light);
             border: none;
-            border-radius: 50px;
-            cursor: pointer;
             box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
-            transition: var(--transition);
-            font-family: inherit;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
-            font-weight: bold;
         }
-
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
+        }
+        .start-button:active {
+            transform: translateY(-1px);
+        }
         .start-button::before {
             content: '';
             position: absolute;
@@ -230,18 +232,8 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             transition: left 0.5s;
         }
-
         .start-button:hover::before {
             left: 100%;
-        }
-
-        .start-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
-        }
-
-        .start-button:active {
-            transform: translateY(-1px);
         }
 
         /* 游戏部分样式优化 */
@@ -333,49 +325,20 @@
             border: 3px solid rgba(52, 152, 219, 0.9);
             background: rgba(255, 255, 255, 0.8);
             color: var(--text-dark);
-            border-radius: 25px;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 15px var(--shadow-medium);
-            backdrop-filter: var(--blur-medium);
-            font-weight: bold;
-            font-family: inherit;
             min-width: 120px;
-            position: relative;
-            overflow: hidden;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            margin: 0 10px;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
         }
-
-        .answer-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(52, 152, 219, 0.3);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            transform: translate(-50%, -50%);
-        }
-
-        .answer-btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .answer-btn:hover {
+        .answer-btn:hover:not(.disabled) {
             background: rgba(52, 152, 219, 0.8);
             color: var(--text-light);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
             border-color: rgba(52, 152, 219, 1);
         }
-
-        .answer-btn:active {
+        .answer-btn:active:not(.disabled) {
             transform: translateY(0);
         }
-
         .answer-btn.disabled {
             opacity: 0.5;
             pointer-events: none;
