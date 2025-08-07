@@ -954,10 +954,27 @@
                 if (!gameState.audioEnabled || !audio) return;
                 
                 try {
+                    // 确保音频已加载
+                    if (audio.readyState < 2) {
+                        await new Promise((resolve) => {
+                            audio.addEventListener('canplaythrough', resolve, { once: true });
+                            audio.load();
+                        });
+                    }
+                    
                     audio.currentTime = 0;
                     await audio.play();
                 } catch (e) {
                     utils.handleError(e, 'Audio playback');
+                    // 如果播放失败，尝试静音播放
+                    try {
+                        audio.muted = true;
+                        await audio.play();
+                        audio.muted = false;
+                        audio.volume = 0.7;
+                    } catch (e2) {
+                        console.warn('音频播放失败，需要用户交互');
+                    }
                 }
             },
 
@@ -1372,17 +1389,10 @@
                     }
                 }, 500);
                 
-                // 立即尝试自动播放开始音乐
+                // 尝试多种方式自动播放音频
                 const startSection = document.getElementById('start-section');
                 if (startSection && startSection.classList.contains('active')) {
-                    audioManager.play(startAudio).catch(() => {
-                        // 如果自动播放失败，设置点击后播放
-                        const playOnClick = () => {
-                            audioManager.play(startAudio);
-                            document.removeEventListener('click', playOnClick);
-                        };
-                        document.addEventListener('click', playOnClick);
-                    });
+                    await attemptAutoPlay();
                 }
                 
             } catch (error) {
@@ -1390,6 +1400,39 @@
                 const loading = document.getElementById('loading');
                 if (loading) {
                     loading.classList.add('hide');
+                }
+            }
+        }
+
+        // 尝试自动播放音频
+        async function attemptAutoPlay() {
+            try {
+                // 方法1：直接播放
+                await audioManager.play(startAudio);
+            } catch (e) {
+                console.log('方法1失败，尝试方法2');
+                try {
+                    // 方法2：设置静音播放后取消静音
+                    startAudio.muted = true;
+                    await startAudio.play();
+                    startAudio.muted = false;
+                    startAudio.volume = 0.7;
+                } catch (e2) {
+                    console.log('方法2失败，尝试方法3');
+                    try {
+                        // 方法3：用户交互后播放
+                        const playOnInteraction = () => {
+                            audioManager.play(startAudio);
+                            document.removeEventListener('click', playOnInteraction);
+                            document.removeEventListener('touchstart', playOnInteraction);
+                            document.removeEventListener('keydown', playOnInteraction);
+                        };
+                        document.addEventListener('click', playOnInteraction);
+                        document.addEventListener('touchstart', playOnInteraction);
+                        document.addEventListener('keydown', playOnInteraction);
+                    } catch (e3) {
+                        console.log('所有自动播放方法都失败');
+                    }
                 }
             }
         }
