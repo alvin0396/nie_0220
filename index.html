@@ -1132,10 +1132,12 @@
                     return;
                 }
                 
-                // 禁用选择按钮
-                answerBtns.forEach(btn => {
-                    btn.disabled = true;
-                    btn.classList.add('disabled');
+                // 禁用选择按钮（用requestAnimationFrame保证UI刷新流畅）
+                requestAnimationFrame(() => {
+                    answerBtns.forEach(btn => {
+                        btn.disabled = true;
+                        btn.classList.add('disabled');
+                    });
                 });
                 
                 // 只在第一题显示说明
@@ -1157,14 +1159,20 @@
                     questionElement.textContent = questions[gameState.currentQuestion];
                     questionElement.style.opacity = '1';
                     progressIndicator.update(gameState.currentQuestion + 2);
-                }, 50);
+                }, 30);
 
-                // 异步加载图片，加载完成后去掉滤镜并启用按钮
+                // 异步加载图片，加载完成后平滑去掉滤镜并启用按钮
                 utils.preloadImage(imageSrc).then(() => {
+                    gameSection.style.transition = 'filter 0.4s cubic-bezier(.4,2,.6,1)';
                     gameSection.style.filter = '';
-                    answerBtns.forEach(btn => {
-                        btn.disabled = false;
-                        btn.classList.remove('disabled');
+                    setTimeout(() => {
+                        gameSection.style.transition = '';
+                    }, 400);
+                    requestAnimationFrame(() => {
+                        answerBtns.forEach(btn => {
+                            btn.disabled = false;
+                            btn.classList.remove('disabled');
+                        });
                     });
                 }).catch(e => {
                     // 图片加载失败，继续用模糊图，不启用按钮
