@@ -1132,26 +1132,26 @@
 
                 questionElement.style.opacity = '0';
                 
-                // 预加载并设置背景
-                const imageSrc = backgroundImages[gameState.currentQuestion];
-                try {
-                    await utils.preloadImage(imageSrc);
-                    const gameSection = document.getElementById('game-section');
-                    if (gameSection) {
-                        gameSection.style.backgroundImage = `url("${imageSrc}")`;
-                    }
-                } catch (e) {
-                    utils.handleError(e, 'Background image loading');
-                }
-                
+                // 先切换UI再异步加载图片
                 setTimeout(() => {
                     questionElement.textContent = questions[gameState.currentQuestion];
                     questionElement.style.opacity = '1';
                     progressIndicator.update(gameState.currentQuestion + 2);
-                }, 300);
+                }, 200);
+
+                // 异步加载图片，加载完成后切换背景
+                const imageSrc = backgroundImages[gameState.currentQuestion];
+                utils.preloadImage(imageSrc).then(() => {
+                    const gameSection = document.getElementById('game-section');
+                    if (gameSection) {
+                        gameSection.style.backgroundImage = `url("${imageSrc}")`;
+                    }
+                }).catch(e => {
+                    utils.handleError(e, 'Background image loading');
+                });
             },
 
-            nextQuestion: utils.debounce(function() {
+            nextQuestion: utils.throttle(function() {
                 const questionElement = document.getElementById('question-text');
                 if (!questionElement || questionElement.style.opacity === '0' || !questionElement.textContent) {
                     return;
