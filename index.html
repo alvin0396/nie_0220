@@ -1117,8 +1117,9 @@
 
                 const questionElement = document.getElementById('question-text');
                 const instructionElement = document.getElementById('instruction');
+                const gameSection = document.getElementById('game-section');
                 
-                if (!questionElement || !instructionElement) {
+                if (!questionElement || !instructionElement || !gameSection) {
                     utils.handleError('Question elements not found', 'showQuestion');
                     return;
                 }
@@ -1132,20 +1133,23 @@
 
                 questionElement.style.opacity = '0';
                 
-                // 先切换UI再异步加载图片
+                // 立即切换UI和背景为模糊/占位
                 setTimeout(() => {
                     questionElement.textContent = questions[gameState.currentQuestion];
                     questionElement.style.opacity = '1';
                     progressIndicator.update(gameState.currentQuestion + 2);
-                }, 200);
+                    // 设置模糊/占位背景
+                    gameSection.style.backgroundImage = '';
+                    gameSection.style.backgroundColor = '#222';
+                    gameSection.style.filter = 'blur(8px)';
+                }, 100);
 
-                // 异步加载图片，加载完成后切换背景
+                // 异步加载图片，加载完成后切换为清晰背景
                 const imageSrc = backgroundImages[gameState.currentQuestion];
                 utils.preloadImage(imageSrc).then(() => {
-                    const gameSection = document.getElementById('game-section');
-                    if (gameSection) {
-                        gameSection.style.backgroundImage = `url("${imageSrc}")`;
-                    }
+                    gameSection.style.backgroundImage = `url("${imageSrc}")`;
+                    gameSection.style.backgroundColor = '';
+                    gameSection.style.filter = '';
                 }).catch(e => {
                     utils.handleError(e, 'Background image loading');
                 });
@@ -1284,10 +1288,10 @@
                 // 设置文字内容并立即开始滚动
                 scrollingText.textContent = message;
                 
-                // 165秒后显示最终消息和星星特效
+                // 180秒后显示最终消息和星星特效
                 setTimeout(() => {
                     this.showFinalMessage();
-                }, 165000);
+                }, 180000);
             },
 
             showFinalMessage() {
