@@ -1245,13 +1245,23 @@
                     return;
                 }
 
-                // 设置文字内容并立即开始滚动
+                // 设置文字内容
                 scrollingText.textContent = message;
                 
-                // 172秒后显示最终消息和星星特效
+                // 先隐藏文字
+                scrollingText.style.opacity = '0';
+                
+                // 5秒后文字出现并开始滚动
+                setTimeout(() => {
+                    if (scrollingText) {
+                        scrollingText.style.opacity = '1';
+                    }
+                }, 5000);
+                
+                // 170秒后显示最终消息和星星特效
                 setTimeout(() => {
                     this.showFinalMessage();
-                }, 172000);
+                }, 170000);
             },
 
             showFinalMessage() {
