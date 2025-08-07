@@ -1133,24 +1133,21 @@
 
                 questionElement.style.opacity = '0';
                 
-                // 立即切换UI和背景为模糊/占位
+                // 立即切换题目和按钮，不等待图片
                 setTimeout(() => {
                     questionElement.textContent = questions[gameState.currentQuestion];
                     questionElement.style.opacity = '1';
                     progressIndicator.update(gameState.currentQuestion + 2);
-                    // 设置模糊/占位背景
-                    gameSection.style.backgroundImage = '';
-                    gameSection.style.backgroundColor = '#222';
-                    gameSection.style.filter = 'blur(8px)';
                 }, 100);
 
-                // 异步加载图片，加载完成后切换为清晰背景
+                // 异步加载图片，加载完成后平滑切换背景
                 const imageSrc = backgroundImages[gameState.currentQuestion];
                 utils.preloadImage(imageSrc).then(() => {
                     gameSection.style.backgroundImage = `url("${imageSrc}")`;
                     gameSection.style.backgroundColor = '';
                     gameSection.style.filter = '';
                 }).catch(e => {
+                    // 图片加载失败，继续用旧图，不做任何处理
                     utils.handleError(e, 'Background image loading');
                 });
             },
