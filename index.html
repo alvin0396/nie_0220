@@ -772,15 +772,15 @@
     <div class="progress-indicator" id="progress-indicator"></div>
 
     <!-- 音频元素 -->
-    <audio id="start-audio" loop preload="auto">
+    <audio id="start-audio" loop preload="auto" playsinline webkit-playsinline x5-playsinline>
         <source src="start-music.mp3" type="audio/mpeg">
         <source src="start-music.ogg" type="audio/ogg">
     </audio>
-    <audio id="game-audio" loop preload="auto">
+    <audio id="game-audio" loop preload="auto" playsinline webkit-playsinline x5-playsinline>
         <source src="game-music.mp3" type="audio/mpeg">
         <source src="game-music.ogg" type="audio/ogg">
     </audio>
-    <audio id="ending-audio" preload="auto">
+    <audio id="ending-audio" preload="auto" playsinline webkit-playsinline x5-playsinline>
         <source src="ending-music.mp3" type="audio/mpeg">
         <source src="ending-music.ogg" type="audio/ogg">
     </audio>
@@ -936,15 +936,31 @@
                 gameAudio = document.getElementById('game-audio');
                 endingAudio = document.getElementById('ending-audio');
 
-                // 预加载音频
+                // 预加载音频并设置移动端优化
                 [startAudio, gameAudio, endingAudio].forEach(audio => {
                     if (audio) {
+                        // 移动端优化设置
+                        audio.preload = 'auto';
                         audio.load();
                         audio.volume = 0.7;
+                        
+                        // 设置移动端兼容性
+                        audio.setAttribute('playsinline', '');
+                        audio.setAttribute('webkit-playsinline', '');
+                        audio.setAttribute('x5-playsinline', '');
                         
                         // 错误处理
                         audio.addEventListener('error', (e) => {
                             utils.handleError(e, 'Audio loading');
+                        });
+                        
+                        // 移动端特殊处理
+                        audio.addEventListener('canplay', () => {
+                            console.log('音频可以播放');
+                        });
+                        
+                        audio.addEventListener('canplaythrough', () => {
+                            console.log('音频完全加载');
                         });
                     }
                 });
@@ -962,19 +978,22 @@
                         });
                     }
                     
+                    // 移动端特殊处理
                     audio.currentTime = 0;
-                    await audio.play();
-                } catch (e) {
-                    utils.handleError(e, 'Audio playback');
-                    // 如果播放失败，尝试静音播放
+                    
+                    // 尝试多种播放方式
                     try {
+                        await audio.play();
+                    } catch (e) {
+                        // 如果直接播放失败，尝试静音播放后取消静音
                         audio.muted = true;
                         await audio.play();
                         audio.muted = false;
                         audio.volume = 0.7;
-                    } catch (e2) {
-                        console.warn('音频播放失败，需要用户交互');
                     }
+                } catch (e) {
+                    utils.handleError(e, 'Audio playback');
+                    console.warn('音频播放失败，需要用户交互');
                 }
             },
 
@@ -1443,6 +1462,24 @@
         } else {
             init();
         }
+
+        // 添加用户交互检测
+        let hasUserInteracted = false;
+        const userInteractionEvents = ['click', 'touchstart', 'keydown', 'mousedown'];
+        
+        userInteractionEvents.forEach(event => {
+            document.addEventListener(event, () => {
+                if (!hasUserInteracted) {
+                    hasUserInteracted = true;
+                    // 用户首次交互时尝试播放音频
+                    if (gameState.audioEnabled && startAudio) {
+                        audioManager.play(startAudio).catch(() => {
+                            console.log('用户交互后音频播放失败');
+                        });
+                    }
+                }
+            }, { once: true });
+        });
 
         // 页面可见性变化处理
         document.addEventListener('visibilitychange', () => {
