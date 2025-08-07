@@ -1133,21 +1133,23 @@
 
                 questionElement.style.opacity = '0';
                 
-                // 立即切换题目和按钮，不等待图片
+                // 立即切换题目和背景（加模糊滤镜）
+                const imageSrc = backgroundImages[gameState.currentQuestion];
+                gameSection.style.backgroundImage = `url("${imageSrc}")`;
+                gameSection.style.backgroundColor = '';
+                gameSection.style.filter = 'blur(10px)';
+                
                 setTimeout(() => {
                     questionElement.textContent = questions[gameState.currentQuestion];
                     questionElement.style.opacity = '1';
                     progressIndicator.update(gameState.currentQuestion + 2);
                 }, 100);
 
-                // 异步加载图片，加载完成后平滑切换背景
-                const imageSrc = backgroundImages[gameState.currentQuestion];
+                // 异步加载图片，加载完成后去掉滤镜
                 utils.preloadImage(imageSrc).then(() => {
-                    gameSection.style.backgroundImage = `url("${imageSrc}")`;
-                    gameSection.style.backgroundColor = '';
                     gameSection.style.filter = '';
                 }).catch(e => {
-                    // 图片加载失败，继续用旧图，不做任何处理
+                    // 图片加载失败，继续用模糊图
                     utils.handleError(e, 'Background image loading');
                 });
             },
