@@ -1131,21 +1131,21 @@
                     instructionElement.style.display = 'none';
                 }
 
-                questionElement.style.opacity = '0';
-                
-                // 立即切换题目和背景（加模糊滤镜）
+                // 立即切换题目和背景（加模糊滤镜，保证同步）
                 const imageSrc = backgroundImages[gameState.currentQuestion];
                 gameSection.style.backgroundImage = `url("${imageSrc}")`;
                 gameSection.style.backgroundColor = '';
                 gameSection.style.filter = 'blur(10px)';
                 
+                // 立即切换题目内容和按钮
+                questionElement.style.opacity = '0';
                 setTimeout(() => {
                     questionElement.textContent = questions[gameState.currentQuestion];
                     questionElement.style.opacity = '1';
                     progressIndicator.update(gameState.currentQuestion + 2);
-                }, 100);
+                }, 50);
 
-                // 异步加载图片，加载完成后去掉滤镜
+                // 异步加载图片，加载完成后去掉滤镜（弱网下也不卡UI）
                 utils.preloadImage(imageSrc).then(() => {
                     gameSection.style.filter = '';
                 }).catch(e => {
@@ -1154,19 +1154,19 @@
                 });
             },
 
+            // nextQuestion采用节流，防止误触但保证响应
             nextQuestion: utils.throttle(function() {
                 const questionElement = document.getElementById('question-text');
                 if (!questionElement || questionElement.style.opacity === '0' || !questionElement.textContent) {
                     return;
                 }
-                
                 gameState.currentQuestion++;
                 if (gameState.currentQuestion < questions.length) {
                     gameCore.showQuestion();
                 } else {
                     gameCore.showEnding();
                 }
-            }, 500),
+            }, 400),
 
             async showEnding() {
                 try {
