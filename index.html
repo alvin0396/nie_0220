@@ -1117,35 +1117,30 @@
                     utils.handleError('Question elements not found', 'showQuestion');
                     return;
                 }
-                
                 // 禁用选择按钮
                 answerBtns.forEach(btn => {
                     btn.disabled = true;
                     btn.classList.add('disabled');
                 });
-                
                 // 只在第一题显示说明
                 if (gameState.currentQuestion === 0) {
                     instructionElement.style.display = 'block';
                 } else {
                     instructionElement.style.display = 'none';
                 }
-
                 // 立即切换题目和背景（加模糊滤镜，保证同步）
                 const imageSrc = backgroundImages[gameState.currentQuestion];
                 gameSection.style.backgroundImage = `url("${imageSrc}")`;
                 gameSection.style.backgroundColor = '';
                 gameSection.style.filter = 'blur(10px)';
-                
-                // 立即切换题目内容和按钮
+                // 立即切换题目内容
                 questionElement.style.opacity = '0';
                 setTimeout(() => {
                     questionElement.textContent = questions[gameState.currentQuestion];
                     questionElement.style.opacity = '1';
                     progressIndicator.update(gameState.currentQuestion + 2);
                 }, 50);
-
-                // 异步加载图片，加载完成后去掉滤镜并启用按钮
+                // 只有图片加载成功后才启用按钮并去除模糊滤镜
                 utils.preloadImage(imageSrc).then(() => {
                     gameSection.style.filter = '';
                     answerBtns.forEach(btn => {
@@ -1153,7 +1148,7 @@
                         btn.classList.remove('disabled');
                     });
                 }).catch(e => {
-                    // 图片加载失败，继续用模糊图，不启用按钮
+                    // 图片加载失败，按钮始终禁用
                     utils.handleError(e, 'Background image loading');
                 });
             },
