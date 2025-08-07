@@ -376,6 +376,13 @@
             transform: translateY(0);
         }
 
+        .answer-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(0.7);
+            cursor: not-allowed;
+        }
+
         /* 结尾部分样式优化 */
         #ending-section {
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
@@ -1118,11 +1125,18 @@
                 const questionElement = document.getElementById('question-text');
                 const instructionElement = document.getElementById('instruction');
                 const gameSection = document.getElementById('game-section');
+                const answerBtns = document.querySelectorAll('.answer-btn');
                 
                 if (!questionElement || !instructionElement || !gameSection) {
                     utils.handleError('Question elements not found', 'showQuestion');
                     return;
                 }
+                
+                // 禁用选择按钮
+                answerBtns.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('disabled');
+                });
                 
                 // 只在第一题显示说明
                 if (gameState.currentQuestion === 0) {
@@ -1145,11 +1159,15 @@
                     progressIndicator.update(gameState.currentQuestion + 2);
                 }, 50);
 
-                // 异步加载图片，加载完成后去掉滤镜（弱网下也不卡UI）
+                // 异步加载图片，加载完成后去掉滤镜并启用按钮
                 utils.preloadImage(imageSrc).then(() => {
                     gameSection.style.filter = '';
+                    answerBtns.forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove('disabled');
+                    });
                 }).catch(e => {
-                    // 图片加载失败，继续用模糊图
+                    // 图片加载失败，继续用模糊图，不启用按钮
                     utils.handleError(e, 'Background image loading');
                 });
             },
