@@ -149,11 +149,14 @@
             10% {
                 opacity: 1;
             }
-            90% {
+            80% {
                 opacity: 1;
             }
+            95% {
+                opacity: 0.7;
+            }
             100% {
-                transform: translateY(-100px) scale(1);
+                transform: translateY(-200px) scale(1.1);
                 opacity: 0;
             }
         }
@@ -1063,22 +1066,33 @@
                     if (!document.getElementById('start-section').classList.contains('active')) {
                         return;
                     }
-                    
-                    const bubble = document.createElement('div');
-                    bubble.className = 'bubble';
-                    bubble.style.left = Math.random() * 100 + '%';
-                    bubble.style.width = bubble.style.height = (Math.random() * 60 + 20) + 'px';
-                    bubble.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                    container.appendChild(bubble);
-
-                    setTimeout(() => {
-                        if (bubble.parentNode) {
-                            bubble.parentNode.removeChild(bubble);
+                    // 随机生成1~2个泡泡
+                    const bubbleCount = Math.random() < 0.5 ? 1 : 2;
+                    for (let i = 0; i < bubbleCount; i++) {
+                        const bubble = document.createElement('div');
+                        bubble.className = 'bubble';
+                        bubble.style.left = Math.random() * 100 + '%';
+                        const size = Math.random() * 50 + 30; // 30~80px
+                        bubble.style.width = bubble.style.height = size + 'px';
+                        // 动画时长 6~10秒
+                        bubble.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                        // 随机透明度
+                        bubble.style.opacity = (Math.random() * 0.4 + 0.5).toFixed(2);
+                        // 偶尔生成彩色发光泡泡
+                        if (Math.random() < 0.25) {
+                            bubble.style.background = 'radial-gradient(circle at 30% 30%, rgba(255,255,200,0.9), rgba(255, 200, 255, 0.3), rgba(255,255,255,0.1))';
+                            bubble.style.boxShadow = '0 0 20px 5px #ffd70088, 0 0 40px 10px #ffb3d988';
                         }
-                    }, 7000);
-                }, 500);
+                        container.appendChild(bubble);
+                        setTimeout(() => {
+                            if (bubble.parentNode) {
+                                bubble.parentNode.removeChild(bubble);
+                            }
+                        }, 11000); // 动画最长10s，留余量
+                    }
+                }, 400); // 生成频率提升
             },
-
+            
             stop() {
                 if (this.intervalId) {
                     clearInterval(this.intervalId);
