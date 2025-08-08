@@ -1142,9 +1142,8 @@
                 } else {
                     instructionElement.style.display = 'none';
                 }
-                // 立即切换题目和背景（加模糊滤镜，保证同步）
-                const imageSrc = backgroundImages[gameState.currentQuestion];
-                gameSection.style.backgroundImage = `url("${imageSrc}")`;
+                // 背景图切换优化：先清除背景图，防止叠加
+                gameSection.style.backgroundImage = '';
                 gameSection.style.backgroundColor = '';
                 gameSection.style.filter = 'blur(10px)';
                 // 立即切换题目内容
@@ -1155,12 +1154,18 @@
                     progressIndicator.update(gameState.currentQuestion + 2);
                 }, 50);
                 // 只有图片加载成功后才启用按钮并去除模糊滤镜
+                const imageSrc = backgroundImages[gameState.currentQuestion];
                 utils.preloadImage(imageSrc).then(() => {
-                    gameSection.style.filter = '';
-                    answerBtns.forEach(btn => {
-                        btn.disabled = false;
-                        btn.classList.remove('disabled');
-                    });
+                    // 背景图淡入，去除模糊
+                    gameSection.style.transition = 'background-image 0.3s, filter 0.5s';
+                    gameSection.style.backgroundImage = `url("${imageSrc}")`;
+                    setTimeout(() => {
+                        gameSection.style.filter = '';
+                        answerBtns.forEach(btn => {
+                            btn.disabled = false;
+                            btn.classList.remove('disabled');
+                        });
+                    }, 200); // 先显示背景再去除模糊，体验更流畅
                 }).catch(e => {
                     // 图片加载失败，按钮始终禁用
                     utils.handleError(e, 'Background image loading');
